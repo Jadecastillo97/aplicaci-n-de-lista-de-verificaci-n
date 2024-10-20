@@ -1,7 +1,7 @@
-import Link from "next/link";
+import Link from "next/link"
 
-import PlaceholderContent from "@/components/demo/placeholder-content";
-import { ContentLayout } from "@/components/admin-panel/content-layout";
+import PlaceholderContent from "@/components/demo/placeholder-content"
+import { ContentLayout } from "@/components/admin-panel/content-layout"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,9 +9,13 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator
-} from "@/components/ui/breadcrumb";
+} from "@/components/ui/breadcrumb"
+import { SystemList } from "@/modules/systems"
+import { fetchSystems } from "@/api"
 
-export default function CategoriesPage() {
+export default async function CategoriesPage() {
+  const { systems, error } = await fetchSystems()
+
   return (
     <ContentLayout title="Categories">
       <Breadcrumb>
@@ -33,7 +37,8 @@ export default function CategoriesPage() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <PlaceholderContent />
+      {error && <PlaceholderContent />}
+      {!error && <SystemList data={systems || []} />}
     </ContentLayout>
-  );
+  )
 }

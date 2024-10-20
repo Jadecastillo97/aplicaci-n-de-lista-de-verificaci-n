@@ -7,6 +7,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb"
+import { FrmSystemEditor } from "@/modules/systems"
 import Link from "next/link"
 
 export default function Page() {
@@ -37,6 +38,9 @@ export default function Page() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
+      <section>
+        <FrmSystemEditor />
+      </section>
     </ContentLayout>
   )
 }

@@ -19,7 +19,7 @@ export default async function CategoriesPage() {
   const { systems, error } = await fetchSystems()
 
   return (
-    <ContentLayout title="Categories">
+    <ContentLayout title="Sistemas">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>

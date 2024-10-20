@@ -13,6 +13,7 @@ import {
 import { SystemList } from "@/modules/systems"
 import { fetchSystems } from "@/api"
 import { Suspense } from "react"
+import { HeaderSection } from "@/modules/core"
 
 export default async function CategoriesPage() {
   const { systems, error } = await fetchSystems()
@@ -34,10 +35,11 @@ export default async function CategoriesPage() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Categories</BreadcrumbPage>
+            <BreadcrumbPage>Sistemas</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
+      <HeaderSection />
       <Suspense fallback={<div>System loading...</div>}>
         {error && <PlaceholderContent />}
         {!error && <SystemList data={systems || []} />}

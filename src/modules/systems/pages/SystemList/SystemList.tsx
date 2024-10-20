@@ -9,7 +9,6 @@ export const SystemList = (props: ISystemListProps) => {
 
   return (
     <main>
-      <h1>System List</h1>
       <ul>
         {data.map((system) => (
           <li key={system.id}>

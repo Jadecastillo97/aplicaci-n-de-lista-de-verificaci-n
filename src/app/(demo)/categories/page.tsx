@@ -39,7 +39,11 @@ export default async function CategoriesPage() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <HeaderSection />
+      <HeaderSection
+        title="Lista de sistemas"
+        description="Administre los sistemas de la organización. Para agregar un nuevo sistema, haga clic en el botón 'Agregar'."
+        href="/admin/categories/new"
+      />
       <Suspense fallback={<div>System loading...</div>}>
         {error && <PlaceholderContent />}
         {!error && <SystemList data={systems || []} />}

@@ -42,7 +42,7 @@ export default async function CategoriesPage() {
       <HeaderSection
         title="Lista de sistemas"
         description="Administre los sistemas de la organización. Para agregar un nuevo sistema, haga clic en el botón 'Agregar'."
-        href="/admin/categories/new"
+        href="categories/new"
       />
       <Suspense fallback={<div>System loading...</div>}>
         {error && <PlaceholderContent />}

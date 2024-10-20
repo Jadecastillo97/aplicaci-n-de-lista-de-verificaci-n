@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/breadcrumb"
 import { SystemList } from "@/modules/systems"
 import { fetchSystems } from "@/api"
+import { Suspense } from "react"
 
 export default async function CategoriesPage() {
   const { systems, error } = await fetchSystems()
@@ -37,8 +38,10 @@ export default async function CategoriesPage() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      {error && <PlaceholderContent />}
-      {!error && <SystemList data={systems || []} />}
+      <Suspense fallback={<div>System loading...</div>}>
+        {error && <PlaceholderContent />}
+        {!error && <SystemList data={systems || []} />}
+      </Suspense>
     </ContentLayout>
   )
 }

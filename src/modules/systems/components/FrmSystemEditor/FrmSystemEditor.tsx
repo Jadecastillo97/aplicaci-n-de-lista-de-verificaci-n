@@ -20,6 +20,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { Loader2 } from "lucide-react"
+import { ISystem } from "@/types"
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -29,17 +30,22 @@ const formSchema = z.object({
   status: z.boolean().optional()
 })
 
-export const FrmSystemEditor = () => {
+interface IProps {
+  defaultValues?: ISystem
+}
+
+export const FrmSystemEditor = (props: IProps) => {
   const [loading, setLoading] = useState(false)
   const { toast } = useToast()
+  const { defaultValues } = props
   const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      status: false
+      name: defaultValues?.name || "",
+      description: defaultValues?.description || "",
+      status: defaultValues?.status || false
     }
   })
 

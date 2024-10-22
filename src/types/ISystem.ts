@@ -3,6 +3,7 @@ export interface ISystem {
   uid?: string
   name: string
   description: string | null
+  status: boolean
 }
 
 export interface ISystemForm {

@@ -3,19 +3,6 @@ import { createClient } from "@/utils/supabase/server"
 import { cookies } from "next/headers"
 import { ISystemForm } from "@/types"
 
-// export async function fetchEvents(props: IProps) {
-//     const { query, date } = props
-//     const supabase = createClient()
-
-//     const { data: event } = await supabase
-//       .from('events')
-//       .select('*,summary:summary_id(*, person:person_id(*))')
-//       .eq('isActived', true)
-//       .ilike('name', `%${query}%`)
-//       .order('created_at', { ascending: false })
-
-//     return event
-//   }
 export async function fetchSystems() {
   const supabase = createClient(cookies())
 
@@ -33,5 +20,17 @@ export async function saveSystem(data: ISystemForm) {
   const { data: system, error } = await supabase.from("systems").insert(data)
   console.log(system)
   console.log(error)
+  return { system, error }
+}
+
+export async function fetchSystem(id: string) {
+  const supabase = createClient(cookies())
+
+  const { data: system, error } = await supabase
+    .from("systems")
+    .select("*")
+    .eq("id", id)
+    .single()
+
   return { system, error }
 }

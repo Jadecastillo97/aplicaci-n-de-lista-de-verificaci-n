@@ -21,7 +21,6 @@ export default async function Page(props: IProps) {
   const { id } = props.params
 
   const { system, error } = await fetchSystem(id)
-
   if (error) {
     return <div>Error loading system</div>
   }

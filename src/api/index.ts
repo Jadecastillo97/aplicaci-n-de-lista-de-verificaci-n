@@ -1,3 +1,8 @@
-import { fetchSystems, saveSystem, fetchSystem } from "./fetchSystems"
+import {
+  fetchSystems,
+  saveSystem,
+  fetchSystem,
+  updateSystem
+} from "./fetchSystems"
 
-export { fetchSystems, saveSystem, fetchSystem }
+export { fetchSystems, saveSystem, fetchSystem, updateSystem }

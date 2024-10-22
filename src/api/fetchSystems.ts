@@ -18,8 +18,16 @@ export async function saveSystem(data: ISystemForm) {
   const supabase = createClient(cookies())
 
   const { data: system, error } = await supabase.from("systems").insert(data)
-  console.log(system)
-  console.log(error)
+  return { system, error }
+}
+
+export async function updateSystem(id: string, data: ISystemForm) {
+  const supabase = createClient(cookies())
+
+  const { data: system, error } = await supabase
+    .from("systems")
+    .update(data)
+    .eq("id", id)
   return { system, error }
 }
 

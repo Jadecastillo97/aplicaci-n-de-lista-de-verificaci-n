@@ -3,7 +3,7 @@ import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { saveSystem } from "@/api"
+import { saveSystem, updateSystem } from "@/api"
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 
@@ -51,7 +51,9 @@ export const FrmSystemEditor = (props: IProps) => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true)
-    const res = await saveSystem(values)
+    const res = defaultValues?.id
+      ? await updateSystem(defaultValues.id, values)
+      : await saveSystem(values)
     if (res.error) {
       const error = res.error.message as string
       toast({

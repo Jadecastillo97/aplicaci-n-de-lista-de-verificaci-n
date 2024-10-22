@@ -15,6 +15,7 @@ import {
   FormMessage
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Switch } from "@/components/ui/switch"
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -26,7 +27,7 @@ const formSchema = z.object({
       message: "Description must be at least 2 characters."
     })
     .optional(),
-  status: z.enum(["TRUE", "FALSE"])
+  status: z.boolean().optional()
 })
 
 export const FrmSystemEditor = () => {
@@ -35,7 +36,7 @@ export const FrmSystemEditor = () => {
     defaultValues: {
       name: "",
       description: "",
-      status: "FALSE"
+      status: false
     }
   })
 
@@ -91,16 +92,21 @@ export const FrmSystemEditor = () => {
           control={form.control}
           name="status"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Estado</FormLabel>
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+              <div className="space-y-0.5">
+                <FormLabel className="text-base">Security emails</FormLabel>
+                <FormDescription>
+                  Receive emails about your account security.
+                </FormDescription>
+              </div>
               <FormControl>
-                <Input
-                  placeholder="shadcn"
-                  {...field}
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  disabled
+                  aria-readonly
                 />
               </FormControl>
-              <FormDescription>Estado del sistema</FormDescription>
-              <FormMessage />
             </FormItem>
           )}
         />

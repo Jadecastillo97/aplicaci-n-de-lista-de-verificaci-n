@@ -24,12 +24,7 @@ const formSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters."
   }),
-  description: z
-    .string()
-    .min(2, {
-      message: "Description must be at least 2 characters."
-    })
-    .optional(),
+  description: z.string().optional(),
   status: z.boolean().optional()
 })
 
@@ -119,9 +114,9 @@ export const FrmSystemEditor = () => {
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
-                <FormLabel className="text-base">Security emails</FormLabel>
+                <FormLabel className="text-base">Estado</FormLabel>
                 <FormDescription>
-                  Receive emails about your account security.
+                  Si el sistema está activo o inactivo
                 </FormDescription>
               </div>
               <FormControl>

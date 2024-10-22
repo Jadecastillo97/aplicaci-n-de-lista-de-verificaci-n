@@ -63,7 +63,7 @@ export const FrmSystemEditor = (props: IProps) => {
       })
     } else {
       toast({
-        title: "Guardado",
+        title: `${defaultValues?.id ? "Actualizado" : "Guardado"}`,
         description: "Datos guardados correctamente",
         color: "green"
       })
@@ -146,7 +146,7 @@ export const FrmSystemEditor = (props: IProps) => {
           disabled={loading}
         >
           {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Guardar datos
+          {defaultValues?.id ? "Actualizar" : "Guardar"}
         </Button>
       </form>
     </Form>

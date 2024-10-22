@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { saveSystem } from "@/api"
 import { useToast } from "@/hooks/use-toast"
+import { useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -31,6 +32,7 @@ const formSchema = z.object({
 export const FrmSystemEditor = () => {
   const [loading, setLoading] = useState(false)
   const { toast } = useToast()
+  const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -59,6 +61,7 @@ export const FrmSystemEditor = () => {
       })
 
       form.reset()
+      router.push("/categories")
     }
 
     setLoading(false)

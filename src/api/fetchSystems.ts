@@ -1,6 +1,7 @@
 "use server"
 import { createClient } from "@/utils/supabase/server"
 import { cookies } from "next/headers"
+import { ISystem } from "@/types"
 
 // export async function fetchEvents(props: IProps) {
 //     const { query, date } = props
@@ -24,4 +25,13 @@ export async function fetchSystems() {
     .order("created_at", { ascending: false })
 
   return { systems, error }
+}
+
+export async function saveSystem(data: ISystem) {
+  const supabase = createClient(cookies())
+
+  const { data: system, error } = await supabase.from("systems").insert(data)
+  console.log(system)
+  console.log(error)
+  return { system, error }
 }

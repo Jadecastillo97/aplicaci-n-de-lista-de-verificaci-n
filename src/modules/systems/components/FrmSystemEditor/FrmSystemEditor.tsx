@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { saveSystem } from "@/api"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -40,10 +41,9 @@ export const FrmSystemEditor = () => {
     }
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const res = await saveSystem(values)
+    console.log(res)
   }
 
   return (
@@ -52,6 +52,9 @@ export const FrmSystemEditor = () => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
+        <header>
+          <h3 className="text-lg font-medium">Agregar sistema</h3>
+        </header>
         <FormField
           control={form.control}
           name="name"
@@ -103,7 +106,6 @@ export const FrmSystemEditor = () => {
                 <Switch
                   checked={field.value}
                   onCheckedChange={field.onChange}
-                  disabled
                   aria-readonly
                 />
               </FormControl>

@@ -1,5 +1,5 @@
-import { ISystem } from "./ISystem"
+import { ISystem, ISystemForm } from "./ISystem"
 import { ITasksList } from "./ITaskList"
 import { ITask, ITaskDetail } from "./ITask"
 
-export type { ISystem, ITasksList, ITask, ITaskDetail }
+export type { ISystem, ISystemForm, ITasksList, ITask, ITaskDetail }

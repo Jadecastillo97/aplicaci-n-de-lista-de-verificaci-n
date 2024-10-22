@@ -45,9 +45,10 @@ export const FrmSystemEditor = () => {
     setLoading(true)
     const res = await saveSystem(values)
     if (res.error) {
+      const error = res.error.message as string
       toast({
         title: "Error",
-        description: "Error al guardar los datos",
+        description: `Error al guardar los datos: ${error}`,
         color: "red"
       })
     } else {

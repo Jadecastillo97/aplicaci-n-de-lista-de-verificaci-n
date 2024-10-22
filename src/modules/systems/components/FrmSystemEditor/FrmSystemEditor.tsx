@@ -1,5 +1,5 @@
 "use client"
-
+import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
+import { Loader2 } from "lucide-react"
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -32,6 +33,8 @@ const formSchema = z.object({
 })
 
 export const FrmSystemEditor = () => {
+  const [loading, setLoading] = useState(false)
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -42,8 +45,10 @@ export const FrmSystemEditor = () => {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true)
     const res = await saveSystem(values)
     console.log(res)
+    setLoading(false)
   }
 
   return (
@@ -112,7 +117,13 @@ export const FrmSystemEditor = () => {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button
+          type="submit"
+          disabled={loading}
+        >
+          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          Guardar datos
+        </Button>
       </form>
     </Form>
   )

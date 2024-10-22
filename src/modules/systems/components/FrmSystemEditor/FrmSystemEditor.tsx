@@ -17,16 +17,25 @@ import {
 import { Input } from "@/components/ui/input"
 
 const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters."
-  })
+  name: z.string().min(2, {
+    message: "Name must be at least 2 characters."
+  }),
+  description: z
+    .string()
+    .min(2, {
+      message: "Description must be at least 2 characters."
+    })
+    .optional(),
+  status: z.enum(["TRUE", "FALSE"])
 })
 
 export const FrmSystemEditor = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: ""
+      name: "",
+      description: "",
+      status: "FALSE"
     }
   })
 
@@ -40,23 +49,57 @@ export const FrmSystemEditor = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8"
+        className="flex flex-col gap-4"
       >
         <FormField
           control={form.control}
-          name="username"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel>Nombre</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="ejemp. Generador"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>Nombre del sistema</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Descripción</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="ejemp. Sistema de generación de energía"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>Descripción del sistema</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="status"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Estado</FormLabel>
               <FormControl>
                 <Input
                   placeholder="shadcn"
                   {...field}
                 />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
+              <FormDescription>Estado del sistema</FormDescription>
               <FormMessage />
             </FormItem>
           )}

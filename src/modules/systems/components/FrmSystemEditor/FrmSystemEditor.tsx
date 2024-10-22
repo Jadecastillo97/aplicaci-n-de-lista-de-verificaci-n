@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { saveSystem } from "@/api"
+import { useToast } from "@/hooks/use-toast"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -34,6 +35,7 @@ const formSchema = z.object({
 
 export const FrmSystemEditor = () => {
   const [loading, setLoading] = useState(false)
+  const { toast } = useToast()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,7 +49,22 @@ export const FrmSystemEditor = () => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true)
     const res = await saveSystem(values)
-    console.log(res)
+    if (res.error) {
+      toast({
+        title: "Error",
+        description: "Error al guardar los datos",
+        color: "red"
+      })
+    } else {
+      toast({
+        title: "Guardado",
+        description: "Datos guardados correctamente",
+        color: "green"
+      })
+
+      form.reset()
+    }
+
     setLoading(false)
   }
 

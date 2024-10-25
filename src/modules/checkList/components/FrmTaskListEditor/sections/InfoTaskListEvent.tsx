@@ -18,15 +18,7 @@ export const InfoTaskListEvent = () => {
   const dateNow = new Date()
 
   const form = useForm<z.infer<typeof TaskLisSchema>>({
-    resolver: zodResolver(TaskLisSchema),
-    defaultValues: {
-      date: dateNow.toISOString(),
-      name: `Tarea ${dateNow.toISOString()}`,
-      coordinates: "",
-      location: "Lima",
-      description: "",
-      status: false
-    }
+    resolver: zodResolver(TaskLisSchema)
   })
 
   return (

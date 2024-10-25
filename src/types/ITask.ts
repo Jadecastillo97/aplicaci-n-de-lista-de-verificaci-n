@@ -26,3 +26,13 @@ export interface ITaskDetail {
   created_at: string
   updated_at: string
 }
+
+export interface ITaskForm {
+  task_list_id: string
+  system_id: string
+  checklist: string
+  frequency: string
+  status: string
+  review: boolean
+  note: string
+}

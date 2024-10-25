@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
 import { TaskLisSchema } from "@/modules/core"
 import { toast } from "@/hooks/use-toast"
+import { InfoTaskListEvent } from "./sections"
 // import { Switch } from '@/components/ui/switch'
 // import { EventFormSchema } from '@/modules/admin'
 // import { ContentDataEvent, InfoDataEvent, StatusDataEvent } from './sections'
@@ -38,6 +39,7 @@ export const FrmTaskListEditor = () => {
         >
           <div>
             <div className="space-y-4">
+              <InfoTaskListEvent />
               {/* <InfoDataEvent />
           <ContentDataEvent />
           <StatusDataEvent /> */}

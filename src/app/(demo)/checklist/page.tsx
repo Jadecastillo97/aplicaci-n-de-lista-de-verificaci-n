@@ -8,7 +8,6 @@ import { HeaderSection } from "@/modules/core"
 
 export default async function Page() {
   const { tasksList, error } = await fetchTaskList()
-  console.log(tasksList)
 
   return (
     <ContentLayout title="Lista de tareas">
@@ -19,8 +18,7 @@ export default async function Page() {
       />
       <Suspense fallback={<div>System loading...</div>}>
         {error && <PlaceholderContent />}
-        {/* {!error && <SystemList data={systems || []} />} */}
-        <CheckListPage />
+        {!error && <CheckListPage data={tasksList || []} />}
       </Suspense>
     </ContentLayout>
   )

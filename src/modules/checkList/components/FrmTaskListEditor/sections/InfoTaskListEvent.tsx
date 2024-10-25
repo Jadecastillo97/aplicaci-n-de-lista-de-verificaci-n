@@ -15,9 +15,20 @@ import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 
 export const InfoTaskListEvent = () => {
+  const dateNow = new Date()
+
   const form = useForm<z.infer<typeof TaskLisSchema>>({
-    resolver: zodResolver(TaskLisSchema)
+    resolver: zodResolver(TaskLisSchema),
+    defaultValues: {
+      date: dateNow.toISOString(),
+      name: `Tarea ${dateNow.toISOString()}`,
+      coordinates: "",
+      location: "Lima",
+      description: "",
+      status: false
+    }
   })
+
   return (
     <div className="flex flex-col gap-2 rounded-lg border p-4 bg-gray-50">
       <header className="grid grid-cols-1">
@@ -40,6 +51,7 @@ export const InfoTaskListEvent = () => {
               <FormControl>
                 <Input
                   name={field.name}
+                  value={field.value}
                   placeholder='Ejemplo: "Tarea de prueba"'
                 />
               </FormControl>
@@ -65,6 +77,7 @@ export const InfoTaskListEvent = () => {
               <FormControl>
                 <Textarea
                   name={field.name}
+                  value={field.value}
                   placeholder="Ejemplo: Se requiere de un proyector para la presentación"
                 />
               </FormControl>
@@ -91,6 +104,7 @@ export const InfoTaskListEvent = () => {
               <FormControl>
                 <Input
                   name={field.name}
+                  value={field.value}
                   placeholder="Ejemplo: Lima"
                 />
               </FormControl>
@@ -117,6 +131,7 @@ export const InfoTaskListEvent = () => {
               <FormControl>
                 <Input
                   name={field.name}
+                  value={field.value}
                   placeholder="Ejemplo: 2022-12-31"
                   type="date"
                 />

@@ -1,4 +1,5 @@
 "use client"
+import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -10,26 +11,21 @@ import { TaskLisSchema } from "@/modules/core"
 import { toast } from "@/hooks/use-toast"
 import { InfoTaskListEvent } from "./sections"
 import { saveTaskList } from "@/api"
+import { ReloadIcon } from "@radix-ui/react-icons"
 // import { Switch } from '@/components/ui/switch'
 // import { ContentDataEvent, InfoDataEvent, StatusDataEvent } from './sections'
 
 export const FrmTaskListEditor = () => {
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
   const dateNow = new Date()
 
   const form = useForm<z.infer<typeof TaskLisSchema>>({
-    resolver: zodResolver(TaskLisSchema),
-    defaultValues: {
-      date: dateNow.toISOString(),
-      name: `Tarea ${dateNow.toISOString()}`,
-      coordinates: "",
-      location: "Lima",
-      description: "",
-      status: false
-    }
+    resolver: zodResolver(TaskLisSchema)
   })
 
   async function onSubmit(data: z.infer<typeof TaskLisSchema>) {
+    setLoading(true)
     const res = await saveTaskList({
       date: data?.date || dateNow.toISOString(),
       name: data?.name,
@@ -52,6 +48,7 @@ export const FrmTaskListEditor = () => {
       })
       router.push("/checklist")
     }
+    setLoading(false)
   }
   return (
     <main>
@@ -66,7 +63,13 @@ export const FrmTaskListEditor = () => {
             </div>
           </div>
           <footer className="flex justify-end space-x-4">
-            <Button type="submit">Guardar datos</Button>
+            <Button
+              type="submit"
+              disabled={loading}
+            >
+              {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+              Guardar datos
+            </Button>
             <Button
               variant="ghost"
               onClick={() => router.push("/checklist")}

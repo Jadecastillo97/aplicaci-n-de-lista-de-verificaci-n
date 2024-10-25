@@ -1,14 +1,10 @@
 import { z } from "zod"
 
 export const TaskLisSchema = z.object({
-  name: z
-    .string()
-    .min(3, {
-      message: "El nombre es requerido y debe tener al menos 3 caracteres."
-    }),
+  name: z.string().min(3),
   description: z.string().optional(),
-  date: z.string().min(3).optional(),
+  date: z.string().optional(),
   status: z.boolean().optional(),
-  location: z.string().min(3).optional(),
-  coordinates: z.string().min(3).optional()
+  location: z.string().optional(),
+  coordinates: z.string().optional()
 })

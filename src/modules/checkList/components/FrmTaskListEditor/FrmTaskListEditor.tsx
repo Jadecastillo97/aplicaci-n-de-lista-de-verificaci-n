@@ -9,26 +9,49 @@ import { Form } from "@/components/ui/form"
 import { TaskLisSchema } from "@/modules/core"
 import { toast } from "@/hooks/use-toast"
 import { InfoTaskListEvent } from "./sections"
+import { saveTaskList } from "@/api"
 // import { Switch } from '@/components/ui/switch'
-// import { EventFormSchema } from '@/modules/admin'
 // import { ContentDataEvent, InfoDataEvent, StatusDataEvent } from './sections'
 
 export const FrmTaskListEditor = () => {
   const router = useRouter()
+  const dateNow = new Date()
 
   const form = useForm<z.infer<typeof TaskLisSchema>>({
-    resolver: zodResolver(TaskLisSchema)
+    resolver: zodResolver(TaskLisSchema),
+    defaultValues: {
+      date: dateNow.toISOString(),
+      name: `Tarea ${dateNow.toISOString()}`,
+      coordinates: "",
+      location: "Lima",
+      description: "",
+      status: false
+    }
   })
 
-  function onSubmit(data: z.infer<typeof TaskLisSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      )
+  async function onSubmit(data: z.infer<typeof TaskLisSchema>) {
+    const res = await saveTaskList({
+      date: data?.date,
+      name: data?.name,
+      coordinates: data?.coordinates,
+      location: data?.location,
+      description: data?.description,
+      status: data?.status
     })
+    console.log(res)
+    if (res.error) {
+      const error = res.error.message as string
+      toast({
+        title: "Error",
+        description: error
+      })
+    } else {
+      toast({
+        title: `Tarea  ${data.name}`,
+        description: "La tarea se ha guardado correctamente"
+      })
+      router.push("/checklist")
+    }
   }
   return (
     <main>
@@ -40,9 +63,6 @@ export const FrmTaskListEditor = () => {
           <div>
             <div className="space-y-4">
               <InfoTaskListEvent />
-              {/* <InfoDataEvent />
-          <ContentDataEvent />
-          <StatusDataEvent /> */}
             </div>
           </div>
           <footer className="flex justify-end space-x-4">

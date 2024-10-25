@@ -32,8 +32,8 @@ export const InfoTaskListEvent = () => {
             <div className="flex flex-col gap-0.5 w-full col-span-1 sm:col-span-1">
               <FormLabel className="text-sm ">Nombre de la tarea</FormLabel>
               <FormDescription className="text-xs">
-                Ingresa el nombre de la tarea. De lo contrario el nombre por
-                defecto será el codigo de la tarea y la fecha de creación.
+                Ingresa el nombre de la tarea. De lo contrario el nombre por la
+                fecha de creación.
               </FormDescription>
             </div>
             <div className="col-span-1 sm:col-span-2 space-y-2">

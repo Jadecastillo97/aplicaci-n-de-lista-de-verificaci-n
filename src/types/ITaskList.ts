@@ -13,7 +13,7 @@ export interface ITaskListForm {
   name: string
   description: string
   date: string
-  status: string
+  status: boolean
   location: string
   coordinates: string
 }

@@ -19,7 +19,9 @@ export async function saveTaskList(data: ITaskListForm) {
 
   const { data: taskList, error } = await supabase
     .from("tasks_list")
-    .insert([data])
+    .insert(data)
+    .single()
+
   return { taskList, error }
 }
 

@@ -1,6 +1,5 @@
 import { ContentLayout } from "@/components/admin-panel/content-layout"
 import { FrmSystemEditor } from "@/modules/systems"
-import Link from "next/link"
 
 export default function Page() {
   return (

@@ -31,12 +31,12 @@ export const FrmTaskListEditor = () => {
 
   async function onSubmit(data: z.infer<typeof TaskLisSchema>) {
     const res = await saveTaskList({
-      date: data?.date,
+      date: data?.date || dateNow.toISOString(),
       name: data?.name,
-      coordinates: data?.coordinates,
-      location: data?.location,
-      description: data?.description,
-      status: data?.status
+      coordinates: data?.coordinates || "",
+      location: data?.location || "Lima",
+      description: data?.description || "",
+      status: data?.status || false
     })
     console.log(res)
     if (res.error) {

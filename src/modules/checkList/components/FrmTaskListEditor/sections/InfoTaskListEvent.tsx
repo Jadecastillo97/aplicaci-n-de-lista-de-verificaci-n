@@ -30,16 +30,17 @@ export const InfoTaskListEvent = () => {
         render={({ field }) => (
           <FormItem className="grid grid-cols-1 sm:grid-cols-3 items-center gap-5">
             <div className="flex flex-col gap-0.5 w-full col-span-1 sm:col-span-1">
-              <FormLabel className="text-sm ">Título</FormLabel>
+              <FormLabel className="text-sm ">Nombre de la tarea</FormLabel>
               <FormDescription className="text-xs">
-                Ingresa el título del evento.
+                Ingresa el nombre de la tarea. De lo contrario el nombre por
+                defecto será el codigo de la tarea y la fecha de creación.
               </FormDescription>
             </div>
             <div className="col-span-1 sm:col-span-2 space-y-2">
               <FormControl>
                 <Input
                   name={field.name}
-                  placeholder='Ejemplo: "Conferencia de tecnología"'
+                  placeholder='Ejemplo: "Tarea de prueba"'
                 />
               </FormControl>
               <FormMessage />
@@ -53,16 +54,18 @@ export const InfoTaskListEvent = () => {
         render={({ field }) => (
           <FormItem className="grid grid-cols-1 sm:grid-cols-3 items-center gap-5">
             <div className="flex flex-col gap-0.5 w-full col-span-1 sm:col-span-1">
-              <FormLabel className="text-sm">Enlace externo</FormLabel>
+              <FormLabel className="text-sm">
+                Observaciones de la tarea
+              </FormLabel>
               <FormDescription className="tex-xs">
-                Si el evento tiene un enlace externo, ingresa la URL aquí.
+                Ingresa las observaciones de la tarea. (Opcional)
               </FormDescription>
             </div>
             <div className="col-span-1 sm:col-span-2 space-y-2">
               <FormControl>
                 <Textarea
                   name={field.name}
-                  placeholder="Ejemplo: https://www.evento.com"
+                  placeholder="Ejemplo: Se requiere de un proyector para la presentación"
                 />
               </FormControl>
               <FormMessage />
@@ -76,16 +79,19 @@ export const InfoTaskListEvent = () => {
         render={({ field }) => (
           <FormItem className="grid grid-cols-1 sm:grid-cols-3 items-center gap-5">
             <div className="flex flex-col gap-0.5 w-full col-span-1 sm:col-span-1">
-              <FormLabel className="text-sm">Duración del evento</FormLabel>
+              <FormLabel className="text-sm">
+                Lugar del evento (opcional)
+              </FormLabel>
               <FormDescription className="text-xs">
-                Ingresa la descripción de la duración del evento.
+                Indica el lugar donde se realizará el evento. Por defecto es
+                Lima
               </FormDescription>
             </div>
             <div className="col-span-1 sm:col-span-2 space-y-2">
               <FormControl>
                 <Input
                   name={field.name}
-                  placeholder="Ejemplo: Del 1 al 5 de diciembre de 2021"
+                  placeholder="Ejemplo: Lima"
                 />
               </FormControl>
               <FormMessage />
@@ -99,16 +105,20 @@ export const InfoTaskListEvent = () => {
         render={({ field }) => (
           <FormItem className="grid grid-cols-1 sm:grid-cols-3 items-center gap-5">
             <div className="flex flex-col gap-0.5 w-full col-span-1 sm:col-span-1">
-              <FormLabel className="text-sm">Ámbito del evento</FormLabel>
+              <FormLabel className="text-sm">
+                Fecha del evento (opcional)
+              </FormLabel>
               <FormDescription className="text-xs">
-                Indica si el evento es local, nacional o internacional.
+                Indica la fecha en que se realizará el evento. Por defecto es la
+                fecha actual
               </FormDescription>
             </div>
             <div className="col-span-1 sm:col-span-2 space-y-2">
               <FormControl>
                 <Input
                   name={field.name}
-                  placeholder="Ejemplo: Nacional"
+                  placeholder="Ejemplo: 2022-12-31"
+                  type="date"
                 />
               </FormControl>
               <FormMessage />

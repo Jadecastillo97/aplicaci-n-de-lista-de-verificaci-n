@@ -1,8 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { TaskLisSchema } from "@/modules/core"
-
 import {
   FormControl,
   FormDescription,
@@ -13,14 +8,16 @@ import {
 } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
+import { UseFormReturn } from "react-hook-form"
+import { z } from "zod"
+import { TaskLisSchema } from "@/modules/core"
 
-export const InfoTaskListEvent = () => {
-  const dateNow = new Date()
+// Recibe el form desde el padre
+interface InfoTaskListEventProps {
+  form: UseFormReturn<z.infer<typeof TaskLisSchema>>
+}
 
-  const form = useForm<z.infer<typeof TaskLisSchema>>({
-    resolver: zodResolver(TaskLisSchema)
-  })
-
+export const InfoTaskListEvent = ({ form }: InfoTaskListEventProps) => {
   return (
     <div className="flex flex-col gap-2 rounded-lg border p-4 bg-gray-50">
       <header className="grid grid-cols-1">
@@ -42,8 +39,7 @@ export const InfoTaskListEvent = () => {
             <div className="col-span-1 sm:col-span-2 space-y-2">
               <FormControl>
                 <Input
-                  name={field.name}
-                  value={field.value}
+                  {...field} // Aquí se pasa el field directamente
                   placeholder='Ejemplo: "Tarea de prueba"'
                 />
               </FormControl>
@@ -68,8 +64,7 @@ export const InfoTaskListEvent = () => {
             <div className="col-span-1 sm:col-span-2 space-y-2">
               <FormControl>
                 <Textarea
-                  name={field.name}
-                  value={field.value}
+                  {...field} // Aquí se pasa el field directamente
                   placeholder="Ejemplo: Se requiere de un proyector para la presentación"
                 />
               </FormControl>
@@ -95,8 +90,7 @@ export const InfoTaskListEvent = () => {
             <div className="col-span-1 sm:col-span-2 space-y-2">
               <FormControl>
                 <Input
-                  name={field.name}
-                  value={field.value}
+                  {...field} // Aquí se pasa el field directamente
                   placeholder="Ejemplo: Lima"
                 />
               </FormControl>
@@ -122,8 +116,7 @@ export const InfoTaskListEvent = () => {
             <div className="col-span-1 sm:col-span-2 space-y-2">
               <FormControl>
                 <Input
-                  name={field.name}
-                  value={field.value}
+                  {...field} // Aquí se pasa el field directamente
                   placeholder="Ejemplo: 2022-12-31"
                   type="date"
                 />

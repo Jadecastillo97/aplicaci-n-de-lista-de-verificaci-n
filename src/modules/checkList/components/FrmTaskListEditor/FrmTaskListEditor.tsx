@@ -21,14 +21,16 @@ export const FrmTaskListEditor = () => {
   const dateNow = new Date()
 
   const form = useForm<z.infer<typeof TaskLisSchema>>({
-    resolver: zodResolver(TaskLisSchema)
+    resolver: zodResolver(TaskLisSchema),
+    mode: "onSubmit"
   })
 
   async function onSubmit(data: z.infer<typeof TaskLisSchema>) {
     setLoading(true)
+    console.log(data)
     const res = await saveTaskList({
-      date: data?.date || dateNow.toISOString(),
       name: data?.name,
+      date: data?.date || dateNow.toISOString(),
       coordinates: data?.coordinates || "",
       location: data?.location || "Lima",
       description: data?.description || "",
@@ -59,7 +61,7 @@ export const FrmTaskListEditor = () => {
         >
           <div>
             <div className="space-y-4">
-              <InfoTaskListEvent />
+              <InfoTaskListEvent form={form} />
             </div>
           </div>
           <footer className="flex justify-end space-x-4">

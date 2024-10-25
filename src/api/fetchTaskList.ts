@@ -7,7 +7,7 @@ export async function fetchTaskList() {
   const supabase = createClient(cookies())
 
   const { data: tasksList, error } = await supabase
-    .from("tasks_list")
+    .from("task_lists")
     .select("*")
     .order("created_at", { ascending: false })
 
@@ -18,7 +18,7 @@ export async function saveTaskList(data: ITaskListForm) {
   const supabase = createClient(cookies())
 
   const { data: taskList, error } = await supabase
-    .from("tasks_list")
+    .from("task_lists")
     .insert(data)
     .single()
 
@@ -29,7 +29,7 @@ export async function updateTaskList(id: string, data: ITaskListForm) {
   const supabase = createClient(cookies())
 
   const { data: tasksList, error } = await supabase
-    .from("tasks_list")
+    .from("task_lists")
     .update(data)
     .eq("id", id)
   return { tasksList, error }
@@ -39,7 +39,7 @@ export async function fetchTaskListById(id: string) {
   const supabase = createClient(cookies())
 
   const { data: tasksList, error } = await supabase
-    .from("tasks_list")
+    .from("task_lists")
     .select("*")
     .eq("id", id)
     .single()

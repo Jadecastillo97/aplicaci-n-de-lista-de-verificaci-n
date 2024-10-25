@@ -1,3 +1,6 @@
+import Link from "next/link"
+
+import PlaceholderContent from "@/components/demo/placeholder-content"
 import { ContentLayout } from "@/components/admin-panel/content-layout"
 import {
   Breadcrumb,
@@ -7,29 +10,17 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb"
-import { FrmSystemEditor } from "@/modules/systems"
-import Link from "next/link"
-import { fetchSystem } from "@/api"
-import { HeaderSection } from "@/modules/core"
+import { CheckListPage } from "@/modules/checkList"
+import { fetchTaskList } from "@/api"
 import { Suspense } from "react"
-import PlaceholderContent from "@/components/demo/placeholder-content"
+import { HeaderSection } from "@/modules/core"
 
-interface IProps {
-  params: {
-    id: string
-  }
-}
-
-export default async function Page(props: IProps) {
-  const { id } = props.params
-
-  const { system, error } = await fetchSystem(id)
-  if (error) {
-    return <div>Error loading system</div>
-  }
+export default async function Page() {
+  const { tasksList, error } = await fetchTaskList()
+  console.log(tasksList)
 
   return (
-    <ContentLayout title="Agregar nuevo sistema">
+    <ContentLayout title="Sistemas">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -45,20 +36,19 @@ export default async function Page(props: IProps) {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/checklist">Lista de tarjetas</Link>
-            </BreadcrumbLink>
+            <BreadcrumbPage>Sistemas</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
       <HeaderSection
-        title="Lista de sistemas"
-        description="Administre los sistemas de la organización. Para agregar un nuevo sistema, haga clic en el botón 'Agregar'."
-        href="categories/new"
+        title="Historial de tareas"
+        description="Administre las tareas de la organización. Para agregar una nueva tarea, haga clic en el botón 'Agregar'."
+        href="/checklist/new"
       />
       <Suspense fallback={<div>System loading...</div>}>
         {error && <PlaceholderContent />}
         {/* {!error && <SystemList data={systems || []} />} */}
+        <CheckListPage />
       </Suspense>
     </ContentLayout>
   )

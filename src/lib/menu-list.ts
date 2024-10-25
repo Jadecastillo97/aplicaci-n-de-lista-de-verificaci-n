@@ -49,11 +49,11 @@ export function getMenuList(pathname: string): Group[] {
           icon: SquarePen,
           submenus: [
             {
-              href: "/posts",
+              href: "/checklist",
               label: "Lista de Checklists"
             },
             {
-              href: "/posts/new",
+              href: "/checklist/new",
               label: "Iniciar Checklist"
             }
           ]

@@ -54,7 +54,7 @@ export function getMenuList(pathname: string): Group[] {
             },
             {
               href: "/posts/new",
-              label: "Nuevo Checklist"
+              label: "Iniciar Checklist"
             }
           ]
         },

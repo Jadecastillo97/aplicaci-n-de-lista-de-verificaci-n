@@ -15,7 +15,7 @@ export function ContentLayout({ title, children }: ContentLayoutProps) {
           <BreadcrumbCustom />
         </main>
       </section>
-      <div className="container pt-8 pb-8 px-4 sm:px-8">{children}</div>
+      <div className="container  pb-8 px-4 sm:px-8">{children}</div>
     </div>
   )
 }

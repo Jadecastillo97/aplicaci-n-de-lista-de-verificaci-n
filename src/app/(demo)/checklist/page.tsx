@@ -11,7 +11,7 @@ export default async function Page() {
   console.log(tasksList)
 
   return (
-    <ContentLayout title="Sistemas">
+    <ContentLayout title="Lista de tareas">
       <HeaderSection
         title="Historial de tareas"
         description="Administre las tareas de la organización. Para agregar una nueva tarea, haga clic en el botón 'Agregar'."

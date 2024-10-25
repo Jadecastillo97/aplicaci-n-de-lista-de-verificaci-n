@@ -47,7 +47,7 @@ export const FrmTaskListEditor = () => {
             <Button type="submit">Guardar datos</Button>
             <Button
               variant="ghost"
-              onClick={() => router.push("/admin/events")}
+              onClick={() => router.push("/checklist")}
             >
               Cancelar
             </Button>

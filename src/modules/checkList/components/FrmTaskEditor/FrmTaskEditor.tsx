@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button"
 import { TaskManySchema } from "@/modules/core"
 import { ITask } from "@/types"
 import { ArrayTask, SystemSection } from "./sections"
-import { saveTaskMany } from "@/api"
+import { updateTaskMany } from "@/api"
 
 interface FrmTaskEditorProps {
   dataTask?: ITask[]
@@ -30,23 +30,22 @@ export const FrmTaskEditor = (props: FrmTaskEditorProps) => {
     defaultValues: {
       tasks:
         dataTask?.map((task) => ({
-          id: task.id || undefined,
+          id: Number(task.id),
           task_list_id: task.task_list_id,
-          system_id: task.system_id,
+          system_id: task.system_id || Number(idSystem),
           chekList: task.chekList || "", // Asegúrate de que esto sea un string
           frecuency: task.frecuency || "", // Asegúrate de que esto sea un string
           review: task.review || false,
           note: task.note || "", // Asegúrate de que esto sea un string
-          status: task.status || false
+          status: Boolean(task.status) || true
         })) || [] // Si no hay dataTask, el valor será un array vacío
     }
   })
 
   async function onSubmit(data: z.infer<typeof TaskManySchema>) {
     setLoading(true)
-    console.log(data)
     try {
-      const res = await saveTaskMany({
+      const res = await updateTaskMany({
         tasks: data.tasks
       })
       console.log(res)
@@ -84,7 +83,7 @@ export const FrmTaskEditor = (props: FrmTaskEditorProps) => {
           <div>
             <div className="space-y-4">
               {/* <InfoTaskListEvent form={form} /> */}
-              <SystemSection idSystem={idSystem} />
+              <SystemSection />
               <ArrayTask form={form} />
             </div>
           </div>

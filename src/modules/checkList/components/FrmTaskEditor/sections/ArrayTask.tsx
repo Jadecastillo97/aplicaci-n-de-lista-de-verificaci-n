@@ -13,7 +13,7 @@ import { UseFormReturn } from "react-hook-form"
 import { z } from "zod"
 import { TaskManySchema } from "@/modules/core"
 import { TrashIcon } from "lucide-react"
-import { useParams } from "next/navigation"
+import { useParams, useSearchParams } from "next/navigation"
 import { useSystemStore } from "./SystemSection"
 
 interface InfoTaskListEventProps {
@@ -23,6 +23,9 @@ interface InfoTaskListEventProps {
 export const ArrayTask = ({ form }: InfoTaskListEventProps) => {
   const { id } = useParams()
   const { selectedSystemId } = useSystemStore()
+  const searchParams = useSearchParams()
+  const idSystem = searchParams.get("system_id")
+
   // Manejar la adición de una nueva tarea
   const addTask = () => {
     const tasks = form.getValues("tasks") || []
@@ -35,7 +38,7 @@ export const ArrayTask = ({ form }: InfoTaskListEventProps) => {
         note: "",
         status: true,
         task_list_id: Number(id),
-        system_id: Number(selectedSystemId)
+        system_id: idSystem ? Number(idSystem) : Number(selectedSystemId)
       }
     ])
   }
@@ -46,6 +49,9 @@ export const ArrayTask = ({ form }: InfoTaskListEventProps) => {
     tasks.splice(index, 1) // Eliminar la tarea del array
     form.setValue("tasks", tasks)
   }
+
+  console.log(form.watch("tasks"))
+
 
   return (
     <div>

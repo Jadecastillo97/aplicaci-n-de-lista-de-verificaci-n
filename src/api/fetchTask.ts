@@ -2,6 +2,7 @@
 import { createClient } from "@/utils/supabase/server"
 import { cookies } from "next/headers"
 import { TaskMany } from "@/modules/core/schemas/TaskListSchema"
+import { ITask } from "@/types"
 
 export async function fetchTasks() {
   const supabase = createClient(cookies())
@@ -88,4 +89,41 @@ export async function saveTaskMany(arrayTask: TaskMany) {
     .insert(arrayTask.tasks)
 
   return { task, error }
+}
+
+export async function updateTaskMany(arrayTask: TaskMany) {
+  const supabase = createClient(cookies())
+
+  // Divide las tareas en dos grupos: con `id` y sin `id`
+  const tasksWithId = arrayTask.tasks.filter((task) => task.id !== undefined)
+  const tasksWithoutId = arrayTask.tasks.filter((task) => task.id === undefined)
+
+  let taskData: ITask[] = []
+  let error = null
+
+  // Actualizar las tareas que ya tienen un `id`
+  if (tasksWithId.length > 0) {
+    console.log(tasksWithId)
+    tasksWithId.forEach(async (task) => {
+      const { data, error: updateError } = await supabase
+        .from("tasks")
+        .update(task)
+        .eq("id", task.id)
+        .select()
+      if (updateError) error = updateError
+      taskData = taskData.concat(data || [])
+    })
+  }
+
+  // Insertar las nuevas tareas sin `id`
+  if (tasksWithoutId.length > 0) {
+    const { data, error: insertError } = await supabase
+      .from("tasks")
+      .insert(tasksWithoutId)
+      .select()
+    if (insertError) error = insertError
+    taskData = taskData.concat(data || [])
+  }
+
+  return { task: taskData, error }
 }

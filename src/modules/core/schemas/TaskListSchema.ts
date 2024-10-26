@@ -28,7 +28,7 @@ export const TaskLisSchema = z.object({
 
 // export const TaskManySchema = z.array(TaskSchema)
 export const TaskSchema = z.object({
-  id: z.string().optional(),
+  id: z.number().optional(),
   task_list_id: z.number(),
   system_id: z.number(),
   chekList: z.string().min(2, {

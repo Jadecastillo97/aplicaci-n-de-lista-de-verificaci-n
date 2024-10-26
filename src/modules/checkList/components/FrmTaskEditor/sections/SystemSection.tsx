@@ -1,16 +1,6 @@
 "use client"
 import create from "zustand"
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from "@/components/ui/form"
-import { UseFormReturn } from "react-hook-form"
-import { z } from "zod"
-import { TaskLisSchema, TaskManySchema } from "@/modules/core"
+import { useEffect } from "react"
 import {
   Select,
   SelectContent,
@@ -19,7 +9,7 @@ import {
   SelectValue
 } from "@/components/ui/select"
 import { useSystems } from "@/modules/systems"
-import { useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 
 interface SystemStore {
   selectedSystemId: number | null
@@ -31,22 +21,14 @@ export const useSystemStore = create<SystemStore>((set) => ({
   setSelectedSystemId: (id) => set({ selectedSystemId: id })
 }))
 
-interface SystemSectionProps {
-  idSystem?: string
-}
+export const SystemSection = () => {
+  const { systems, loading } = useSystems()
+  const searchParams = useSearchParams()
 
-export const SystemSection = (props: SystemSectionProps) => {
-  const { idSystem } = props
-  const { systems } = useSystems()
+  const idSystem = searchParams.get("system_id")
 
   // Accede a selectedSystemId y setSelectedSystemId desde el store de Zustand
   const { setSelectedSystemId } = useSystemStore()
-
-  useEffect(() => {
-    if (idSystem) {
-      setSelectedSystemId(parseInt(idSystem))
-    }
-  }, [idSystem])
 
   return (
     <div className="flex flex-col sm:flex-row gap-2 items-center">
@@ -58,14 +40,17 @@ export const SystemSection = (props: SystemSectionProps) => {
       </div>
       <div className="w-full">
         <Select
-          // defaultValue={idSystem ? idSystem : ""}
+          defaultValue={idSystem ? String(idSystem) : ""}
           onValueChange={(value) => {
             const systemId = parseInt(value)
             setSelectedSystemId(systemId) // Actualiza el system_id global en el store de Zustand
           }}
+          disabled={systems.length === 0 || idSystem !== null}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Selecciona un sistema" />
+            <SelectValue
+              placeholder={loading ? "Cargando..." : "Selecciona un sistema"}
+            />
           </SelectTrigger>
           <SelectContent>
             {systems.map((system) => (

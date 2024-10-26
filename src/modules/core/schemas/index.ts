@@ -1,3 +1,3 @@
-import { TaskLisSchema } from "./TaskListSchema"
+import { TaskLisSchema, TaskSchema, TaskManySchema } from "./TaskListSchema"
 
-export { TaskLisSchema }
+export { TaskLisSchema, TaskSchema, TaskManySchema }

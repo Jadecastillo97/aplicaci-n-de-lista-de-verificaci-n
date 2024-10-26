@@ -12,8 +12,6 @@ import { toast } from "@/hooks/use-toast"
 import { InfoTaskListEvent } from "./sections"
 import { saveTaskList } from "@/api"
 import { ReloadIcon } from "@radix-ui/react-icons"
-// import { Switch } from '@/components/ui/switch'
-// import { ContentDataEvent, InfoDataEvent, StatusDataEvent } from './sections'
 
 export const FrmTaskListEditor = () => {
   const [loading, setLoading] = useState(false)
@@ -27,7 +25,6 @@ export const FrmTaskListEditor = () => {
 
   async function onSubmit(data: z.infer<typeof TaskLisSchema>) {
     setLoading(true)
-    console.log(data)
     const res = await saveTaskList({
       name: data?.name,
       date: data?.date || dateNow.toISOString(),

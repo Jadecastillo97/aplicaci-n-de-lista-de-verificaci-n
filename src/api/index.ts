@@ -11,6 +11,16 @@ import {
   updateTaskList
 } from "./fetchTaskList"
 
+import {
+  fetchTaskById,
+  fetchTasks,
+  saveTaskMany,
+  fetchTasksByTaskListId,
+  fetchTasksByTaskListDetailsId,
+  fetchTasksByTaskListDetails,
+  updateTaskMany
+} from "./fetchTask"
+
 export {
   fetchSystems,
   saveSystem,
@@ -19,5 +29,12 @@ export {
   fetchTaskList,
   fetchTaskListById,
   saveTaskList,
-  updateTaskList
+  updateTaskList,
+  fetchTaskById,
+  fetchTasks,
+  saveTaskMany,
+  fetchTasksByTaskListId,
+  fetchTasksByTaskListDetailsId,
+  fetchTasksByTaskListDetails,
+  updateTaskMany
 }

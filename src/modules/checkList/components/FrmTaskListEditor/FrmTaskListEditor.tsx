@@ -25,7 +25,6 @@ export const FrmTaskListEditor = () => {
 
   async function onSubmit(data: z.infer<typeof TaskLisSchema>) {
     setLoading(true)
-    console.log(data)
     const res = await saveTaskList({
       name: data?.name,
       date: data?.date || dateNow.toISOString(),

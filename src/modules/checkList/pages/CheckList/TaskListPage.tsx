@@ -3,16 +3,13 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle
 } from "@/components/ui/card"
 import { groupTasksBySystem } from "@/lib/parse-data-task"
-import { parseDate } from "@/lib/parse-date"
 import { ITaskDetail } from "@/types"
-import { CirclePlus, FilePenLine, Info } from "lucide-react"
+import { FilePenLine, Info, SquarePen } from "lucide-react"
 import Link from "next/link"
-import { date } from "zod"
 
 interface ITasksPageProps {
   data: ITaskDetail[]
@@ -32,48 +29,60 @@ export const TaskListPage = (props: ITasksPageProps) => {
             <Card>
               <CardHeader>
                 <CardTitle>
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:justify-between items-center">
                     <div>
                       <span className="bg-gray-50 text-gray-800 px-5 border py-1 text-sm rounded-full font-medium">
                         Sistema: {Task.system.name}
                       </span>
                     </div>
+                    <div>
+                      <Button
+                        className="btn btn-primary"
+                        asChild
+                        variant="outline"
+                        size="sm"
+                      >
+                        <Link
+                          href={`/checklist/${Task.data[0].task_list.id}/cards/new?system_id=${Task.system.id}`}
+                        >
+                          <SquarePen className="w-4 h-4" />
+                          Editar tarjeta
+                        </Link>
+                      </Button>
+                    </div>
                   </div>
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="py-0 pb-2">
                 <CardDescription>
-                  <section>
-                    {Task.data.map((task) => (
-                      <div key={task.id}>
-                        <div>
-                          <span className="bg-yellow-50 text-yellow-800 px-4 py-1 rounded-full text-xs font-medium">
-                            {task.created_at
-                              ? parseDate(task.created_at)
-                              : "Ninguna"}
-                          </span>
-                        </div>
-                        <div>
-                          <h1>{task.chekList}</h1>
-                        </div>
-                      </div>
-                    ))}
+                  <section className="w-full">
+                    <ul className="w-full">
+                      {Task.data.map((task) => (
+                        <li
+                          key={task.id}
+                          className="mb-2"
+                        >
+                          <div>
+                            <h1 className="text-sm">
+                              {task.chekList}, Frecuencia: {task.frecuency},
+                              Revisión: {task.review ? "OK" : "Pendiente"}
+                            </h1>
+                          </div>
+                          <div className="text-sm">
+                            <span className="text-gray-500">
+                              nota: {task.note || "Sin notas"}
+                            </span>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
                   </section>
                 </CardDescription>
               </CardContent>
+              {/* <hr />
               <CardFooter>
-                <div className="flex justify-end gap-3">
-                  <Button
-                    className="btn btn-primary"
-                    asChild
-                    variant="secondary"
-                    size="sm"
-                  >
-                    <Link href={`/checklist/${Task.system.id}/cards`}>
-                      <CirclePlus className="w-4 h-4" />
-                      Gestionar tarjetas
-                    </Link>
-                  </Button>
+                <div className="flex justify-end gap-3 pt-2">
+                  
                   <Button
                     className="btn btn-primary"
                     variant="secondary"
@@ -97,7 +106,7 @@ export const TaskListPage = (props: ITasksPageProps) => {
                     </Link>
                   </Button>
                 </div>
-              </CardFooter>
+              </CardFooter> */}
             </Card>
           </li>
         ))}

@@ -2,7 +2,8 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel
+  FormLabel,
+  FormMessage
 } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
@@ -84,6 +85,7 @@ export const ArrayTask = ({ form }: InfoTaskListEventProps) => {
                   placeholder="Ingrese el nombre de la tarea"
                   {...field}
                 />
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -124,7 +126,6 @@ export const ArrayTask = ({ form }: InfoTaskListEventProps) => {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name={`tasks.${index}.note`}

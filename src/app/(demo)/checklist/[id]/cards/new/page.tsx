@@ -7,13 +7,19 @@ interface IProps {
   params: {
     id: string
   }
+  searchParams: {
+    [key: string]: string | string[] | undefined
+  }
 }
 
 export default async function Page(props: IProps) {
   const { id } = props.params
+  const { searchParams } = props
+
+  const { system_id } = searchParams
 
   let taskListData: ITasksList | null = null
-  //   let tasksData: ITask[] = []
+  let tasksData: ITask[] = []
 
   try {
     const { tasksList } = await fetchTaskListById(id)
@@ -22,16 +28,18 @@ export default async function Page(props: IProps) {
     console.error(error)
   }
 
-  //   try {
-  //     const { tasks } = await fetchTasksByTaskListId(id)
-  //     if (tasks) {
-  //       tasksData = tasks
-  //     } else {
-  //       tasksData = []
-  //     }
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
+  if (system_id) {
+    try {
+      const { tasks } = await fetchTasksByTaskListId(id)
+      if (tasks) {
+        tasksData = tasks
+      } else {
+        tasksData = []
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   return (
     <ContentLayout title="Agregar tarjeta">
@@ -44,7 +52,8 @@ export default async function Page(props: IProps) {
       <section>
         <FrmTaskEditor
           dataTaskListId={id}
-          //   dataTask={tasksData}
+          idSystem={String(system_id)}
+          {...(system_id && { dataTask: tasksData })}
         />
       </section>
     </ContentLayout>

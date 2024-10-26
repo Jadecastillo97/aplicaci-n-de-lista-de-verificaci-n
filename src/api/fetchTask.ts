@@ -62,11 +62,9 @@ export async function fetchTaskById(id: string) {
 
 export async function saveTaskMany(arrayTask: TaskMany) {
   const supabase = createClient(cookies())
-
   const { data: task, error } = await supabase
     .from("tasks")
     .insert(arrayTask.tasks)
-    .single()
 
   return { task, error }
 }

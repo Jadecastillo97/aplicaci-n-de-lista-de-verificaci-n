@@ -16,10 +16,11 @@ import { saveTaskMany } from "@/api"
 interface FrmTaskEditorProps {
   dataTask?: ITask[]
   dataTaskListId: string
+  idSystem?: string
 }
 
 export const FrmTaskEditor = (props: FrmTaskEditorProps) => {
-  const { dataTask } = props
+  const { dataTask, dataTaskListId, idSystem } = props
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
@@ -83,7 +84,7 @@ export const FrmTaskEditor = (props: FrmTaskEditorProps) => {
           <div>
             <div className="space-y-4">
               {/* <InfoTaskListEvent form={form} /> */}
-              <SystemSection />
+              <SystemSection idSystem={idSystem} />
               <ArrayTask form={form} />
             </div>
           </div>
@@ -100,6 +101,7 @@ export const FrmTaskEditor = (props: FrmTaskEditorProps) => {
               onClick={() =>
                 router.push(`/checklist/${props.dataTaskListId}/cards`)
               }
+              type="button"
             >
               Cancelar
             </Button>

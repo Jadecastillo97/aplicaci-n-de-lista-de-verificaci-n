@@ -32,23 +32,21 @@ export const useSystemStore = create<SystemStore>((set) => ({
 }))
 
 interface SystemSectionProps {
-  form: UseFormReturn<z.infer<typeof TaskManySchema>>
+  idSystem?: string
 }
 
-export const SystemSection = () => {
-  //   const { form } = props
+export const SystemSection = (props: SystemSectionProps) => {
+  const { idSystem } = props
   const { systems } = useSystems()
 
   // Accede a selectedSystemId y setSelectedSystemId desde el store de Zustand
-  const { selectedSystemId, setSelectedSystemId } = useSystemStore()
+  const { setSelectedSystemId } = useSystemStore()
 
-  // Efecto para actualizar el system_id en todas las tareas cuando selectedSystemId cambia
-  //   useEffect(() => {
-  //     if (selectedSystemId !== null) {
-  //       form.setValue("0.system_id", selectedSystemId)
-  //       form.trigger()
-  //     }
-  //   }, [selectedSystemId])
+  useEffect(() => {
+    if (idSystem) {
+      setSelectedSystemId(parseInt(idSystem))
+    }
+  }, [idSystem])
 
   return (
     <div className="flex flex-col sm:flex-row gap-2 items-center">
@@ -60,6 +58,7 @@ export const SystemSection = () => {
       </div>
       <div className="w-full">
         <Select
+          defaultValue={idSystem ? idSystem : ""}
           onValueChange={(value) => {
             const systemId = parseInt(value)
             setSelectedSystemId(systemId) // Actualiza el system_id global en el store de Zustand
@@ -71,7 +70,7 @@ export const SystemSection = () => {
           <SelectContent>
             {systems.map((system) => (
               <SelectItem
-                key={system.id}
+                key={String(system.id)}
                 value={String(system.id)}
               >
                 {system.name}

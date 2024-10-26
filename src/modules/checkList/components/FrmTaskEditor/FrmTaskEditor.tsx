@@ -10,7 +10,7 @@ import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import { TaskManySchema } from "@/modules/core"
 import { ITask } from "@/types"
-import { SystemSection } from "./sections"
+import { ArrayTask, SystemSection } from "./sections"
 
 interface FrmTaskEditorProps {
   dataTask?: ITask[]
@@ -26,17 +26,19 @@ export const FrmTaskEditor = (props: FrmTaskEditorProps) => {
   const form = useForm<z.infer<typeof TaskManySchema>>({
     resolver: zodResolver(TaskManySchema),
     mode: "onSubmit",
-    defaultValues:
-      dataTask?.map((task) => ({
-        id: task.id ?? undefined,
-        task_list_id: task.task_list_id,
-        system_id: task.system_id,
-        chekList: task.chekList || undefined,
-        frecuency: task.frecuency || undefined,
-        review: task.review || false,
-        note: task.note || undefined,
-        status: task.status
-      })) || ([] as z.infer<typeof TaskManySchema>)
+    defaultValues: {
+      tasks:
+        dataTask?.map((task) => ({
+          id: task.id ?? undefined,
+          task_list_id: task.task_list_id,
+          system_id: task.system_id,
+          chekList: task.chekList || "", // Asegúrate de que esto sea un string
+          frecuency: task.frecuency || "", // Asegúrate de que esto sea un string
+          review: task.review || false,
+          note: task.note || "", // Asegúrate de que esto sea un string
+          status: task.status || false
+        })) || [] // Si no hay dataTask, el valor será un array vacío
+    }
   })
 
   async function onSubmit(data: z.infer<typeof TaskManySchema>) {
@@ -78,6 +80,7 @@ export const FrmTaskEditor = (props: FrmTaskEditorProps) => {
             <div className="space-y-4">
               {/* <InfoTaskListEvent form={form} /> */}
               <SystemSection />
+              <ArrayTask form={form} />
             </div>
           </div>
           <footer className="flex justify-end space-x-4">

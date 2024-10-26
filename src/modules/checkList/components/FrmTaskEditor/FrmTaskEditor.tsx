@@ -21,7 +21,6 @@ export const FrmTaskEditor = (props: FrmTaskEditorProps) => {
   const { dataTask } = props
   const [loading, setLoading] = useState(false)
   const router = useRouter()
-  const dateNow = new Date()
 
   const form = useForm<z.infer<typeof TaskManySchema>>({
     resolver: zodResolver(TaskManySchema),

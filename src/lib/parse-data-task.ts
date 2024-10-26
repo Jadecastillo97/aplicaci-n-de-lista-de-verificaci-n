@@ -3,7 +3,6 @@ import { ITaskDetail, ITasksForSystem } from "@/types"
 export function groupTasksBySystem(tasks: ITaskDetail[]): ITasksForSystem[] {
   const taskMap: { [key: string]: ITaskDetail[] } = {}
   // Seleccionar el sistema de en comun de la lista
-  const system = tasks[0].system
 
   // Agrupar tareas por system_id
   tasks.forEach((task) => {
@@ -17,7 +16,7 @@ export function groupTasksBySystem(tasks: ITaskDetail[]): ITasksForSystem[] {
 
   // Convertir el mapa a un array de ITasksForSystem
   return Object.keys(taskMap).map((systemId) => ({
-    system: system,
+    system: taskMap[systemId].map((task) => task.system)[0],
     data: taskMap[systemId]
   }))
 }

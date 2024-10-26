@@ -30,7 +30,7 @@ export default async function Page(props: IProps) {
 
   if (system_id) {
     try {
-      const { tasks } = await fetchTasksByTaskListId(id)
+      const { tasks } = await fetchTasksByTaskListId(id, String(system_id))
       if (tasks) {
         tasksData = tasks
       } else {

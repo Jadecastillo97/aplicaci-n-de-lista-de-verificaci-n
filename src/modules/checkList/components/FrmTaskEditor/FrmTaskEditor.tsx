@@ -30,7 +30,7 @@ export const FrmTaskEditor = (props: FrmTaskEditorProps) => {
     defaultValues: {
       tasks:
         dataTask?.map((task) => ({
-          id: task.id ?? undefined,
+          id: task.id || undefined,
           task_list_id: task.task_list_id,
           system_id: task.system_id,
           chekList: task.chekList || "", // Asegúrate de que esto sea un string

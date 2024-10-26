@@ -56,7 +56,7 @@ export const TaskListPage = (props: ITasksPageProps) => {
               <CardContent className="py-0 pb-2">
                 <CardDescription>
                   <section className="w-full">
-                    <ul className="w-full">
+                    <ul className="w-full list-outside list-disc pl-5">
                       {Task.data.map((task) => (
                         <li
                           key={task.id}

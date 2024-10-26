@@ -14,29 +14,50 @@ export async function fetchTasks() {
   return { tasks, error }
 }
 
-export async function fetchTasksByTaskListId(taskListId: string) {
+export async function fetchTasksByTaskListId(
+  taskListId: string,
+  systemId?: string
+) {
   const supabase = createClient(cookies())
 
-  const { data: tasks, error } = await supabase
+  let query = supabase
     .from("tasks")
     .select("*")
     .eq("task_list_id", taskListId)
     .order("created_at", { ascending: false })
 
+  if (systemId) {
+    query = query.eq("system_id", systemId)
+  }
+
+  const { data: tasks, error } = await query
+
   return { tasks, error }
 }
 
-export async function fetchTasksByTaskListDetailsId(taskListId: string) {
+export async function fetchTasksByTaskListDetailsId(
+  taskListId: string,
+  systemId?: string
+) {
   const supabase = createClient(cookies())
 
-  const { data: tasks, error } = await supabase
+  // Construye la consulta base
+  let query = supabase
     .from("tasks")
     .select("*, system:system_id(*), task_list:task_list_id(*)")
     .eq("task_list_id", taskListId)
     .order("created_at", { ascending: false })
 
+  // Si se proporciona `systemId`, añade la condición adicional
+  if (systemId) {
+    query = query.eq("system_id", systemId)
+  }
+
+  const { data: tasks, error } = await query
+
   return { tasks, error }
 }
+
 export async function fetchTasksByTaskListDetails() {
   const supabase = createClient(cookies())
 

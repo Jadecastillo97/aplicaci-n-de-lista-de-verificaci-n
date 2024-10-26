@@ -58,7 +58,7 @@ export const SystemSection = (props: SystemSectionProps) => {
       </div>
       <div className="w-full">
         <Select
-          defaultValue={idSystem ? idSystem : ""}
+          // defaultValue={idSystem ? idSystem : ""}
           onValueChange={(value) => {
             const systemId = parseInt(value)
             setSelectedSystemId(systemId) // Actualiza el system_id global en el store de Zustand

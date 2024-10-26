@@ -10,6 +10,7 @@ import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import { TaskManySchema } from "@/modules/core"
 import { ITask } from "@/types"
+import { SystemSection } from "./sections"
 
 interface FrmTaskEditorProps {
   dataTask?: ITask[]
@@ -76,6 +77,7 @@ export const FrmTaskEditor = (props: FrmTaskEditorProps) => {
           <div>
             <div className="space-y-4">
               {/* <InfoTaskListEvent form={form} /> */}
+              <SystemSection />
             </div>
           </div>
           <footer className="flex justify-end space-x-4">

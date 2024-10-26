@@ -14,6 +14,18 @@ export async function fetchTasks() {
   return { tasks, error }
 }
 
+export async function fetchTasksByTaskListId(taskListId: string) {
+  const supabase = createClient(cookies())
+
+  const { data: tasks, error } = await supabase
+    .from("tasks")
+    .select("*")
+    .eq("task_list_id", taskListId)
+    .order("created_at", { ascending: false })
+
+  return { tasks, error }
+}
+
 export async function fetchTaskById(id: string) {
   const supabase = createClient(cookies())
 

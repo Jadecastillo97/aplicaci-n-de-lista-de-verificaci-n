@@ -1,5 +1,6 @@
 import { fetchTaskListById } from "@/api"
 import { ContentLayout } from "@/components/admin-panel/content-layout"
+import { DetailsTaskList, FrmTaskEditor } from "@/modules/checkList"
 import { ITasksList } from "@/types"
 
 interface IProps {
@@ -22,7 +23,15 @@ export default async function Page(props: IProps) {
 
   return (
     <ContentLayout title="Agregar tarjeta">
-      <main className="py-4"></main>
+      {taskListData && (
+        <DetailsTaskList
+          data={taskListData}
+          hiddenActions
+        />
+      )}
+      <section>
+        <FrmTaskEditor dataTaskListId={id} />
+      </section>
     </ContentLayout>
   )
 }

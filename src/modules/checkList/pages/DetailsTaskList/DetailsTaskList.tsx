@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button"
 import { parseDate } from "@/lib/parse-date"
 import { ITasksList } from "@/types"
 import { ListPlus, Sheet } from "lucide-react"
+import Link from "next/link"
 
 interface DetailsTaskListProps {
   data: ITasksList
@@ -24,9 +25,11 @@ export const DetailsTaskList = (props: DetailsTaskListProps) => {
           </section>
           {!hiddenActions && (
             <section className="flex gap-3 items-center">
-              <Button>
-                <ListPlus size={24} />
-                Añadir tarjeta
+              <Button asChild>
+                <Link href={`/checklist/${data.id}/cards/new`}>
+                  <ListPlus size={24} />
+                  Añadir tarjeta
+                </Link>
               </Button>
               <Button variant="secondary">
                 <Sheet size={24} />

@@ -3,12 +3,12 @@ import { ITasksList } from "./ITaskList"
 
 export interface ITask {
   id: string
-  uid?: string
-  task_list_id: string
-  system_id: string
-  checklist: string
-  frequency: string
-  status: string
+  // uid?: string
+  task_list_id: number
+  system_id: number
+  chekList: string
+  frecuency: string
+  status: boolean
   review: boolean
   note: string
 }

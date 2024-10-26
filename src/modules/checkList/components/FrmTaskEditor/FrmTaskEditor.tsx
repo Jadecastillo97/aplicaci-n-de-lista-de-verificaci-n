@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 import { TaskManySchema } from "@/modules/core"
 import { ITask } from "@/types"
 import { ArrayTask, SystemSection } from "./sections"
+import { saveTaskMany } from "@/api"
 
 interface FrmTaskEditorProps {
   dataTask?: ITask[]
@@ -43,28 +44,32 @@ export const FrmTaskEditor = (props: FrmTaskEditorProps) => {
   async function onSubmit(data: z.infer<typeof TaskManySchema>) {
     setLoading(true)
     console.log(data)
-    // const res = await saveTaskList({
-    //   name: data?.name,
-    //   date: data?.date || dateNow.toISOString(),
-    //   coordinates: data?.coordinates || "",
-    //   location: data?.location || "Lima",
-    //   description: data?.description || "",
-    //   status: data?.status || false
-    // })
-    // console.log(res)
-    // if (res.error) {
-    //   const error = res.error.message as string
-    //   toast({
-    //     title: "Error",
-    //     description: error
-    //   })
-    // } else {
-    //   toast({
-    //     title: `Tarea  ${data.name}`,
-    //     description: "La tarea se ha guardado correctamente"
-    //   })
-    //   router.push("/checklist")
-    // }
+    try {
+      const res = await saveTaskMany({
+        tasks: data.tasks
+      })
+      console.log(res)
+      if (res.error) {
+        const error = res.error.message as string
+        toast({
+          title: "Error",
+          description: error
+        })
+      } else {
+        toast({
+          title: "Tarea",
+          description: "La tarea se ha guardado correctamente"
+        })
+        router.push(`/checklist/${props.dataTaskListId}/cards`)
+      }
+    } catch (error) {
+      const resError = error as { message: string }
+      toast({
+        title: "Error",
+        description: resError.message
+      })
+    }
+
     setLoading(false)
   }
 

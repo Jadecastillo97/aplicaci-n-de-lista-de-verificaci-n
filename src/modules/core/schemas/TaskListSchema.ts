@@ -48,3 +48,4 @@ export const TaskManySchema = z.object({
 
 export type TaskList = z.infer<typeof TaskLisSchema>
 export type Task = z.infer<typeof TaskSchema>
+export type TaskMany = z.infer<typeof TaskManySchema>

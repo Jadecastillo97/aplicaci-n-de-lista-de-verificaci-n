@@ -17,14 +17,19 @@ export interface ITaskDetail {
   id: string
   uid?: string
   task_list: ITasksList
-  system_id: ISystem
-  checklist: string
-  frequency: string
+  system: ISystem
+  chekList: string
+  frecuency: string
   status: string
   review: boolean
   note: string
   created_at: string
   updated_at: string
+}
+
+export interface ITasksForSystem {
+  system: ISystem
+  data: ITaskDetail[]
 }
 
 export interface ITaskForm {

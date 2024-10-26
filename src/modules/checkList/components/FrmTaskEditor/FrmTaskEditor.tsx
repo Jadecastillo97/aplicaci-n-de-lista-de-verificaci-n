@@ -68,7 +68,7 @@ export const FrmTaskEditor = (props: FrmTaskEditorProps) => {
   }
 
   return (
-    <main>
+    <main className="p-4 rounded-sm border mt-4">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

@@ -1,3 +1,4 @@
+'use client'
 import { useEffect, useState } from "react"
 import { ISystem } from "@/types"
 import { fetchSystems } from "@/api"
@@ -24,7 +25,7 @@ export const useSystems = () => {
       setLoading(false)
     }
 
-    fetchSystems()
+    fetchSystemsList()
   }, [])
 
   return { systems, error, loading }

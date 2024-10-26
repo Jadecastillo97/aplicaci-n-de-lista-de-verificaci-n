@@ -51,37 +51,35 @@ export const SystemSection = () => {
   //   }, [selectedSystemId])
 
   return (
-    <div>
-      {/* <FormField
-        control={form.control}
-        name="system_id"
-        render={() => (
-          <FormItem>
-            <FormLabel>System</FormLabel>
-          
-          </FormItem>
-        )}
-      /> */}
-      <Select
-        onValueChange={(value) => {
-          const systemId = parseInt(value)
-          setSelectedSystemId(systemId) // Actualiza el system_id global en el store de Zustand
-        }}
-      >
-        <SelectTrigger>
-          <SelectValue placeholder="Select a system" />
-        </SelectTrigger>
-        <SelectContent>
-          {systems.map((system) => (
-            <SelectItem
-              key={system.id}
-              value={String(system.id)}
-            >
-              {system.name}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+    <div className="flex flex-col sm:flex-row gap-2 items-center">
+      <div className="w-ful sm:w-[300px]">
+        <h3 className="mb-1 text-sm font-bold">Sistema</h3>
+        <p className="text-xs text-gray-500">
+          Selecciona un sistema para asignar a todos los checklists.
+        </p>
+      </div>
+      <div className="w-full">
+        <Select
+          onValueChange={(value) => {
+            const systemId = parseInt(value)
+            setSelectedSystemId(systemId) // Actualiza el system_id global en el store de Zustand
+          }}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Selecciona un sistema" />
+          </SelectTrigger>
+          <SelectContent>
+            {systems.map((system) => (
+              <SelectItem
+                key={system.id}
+                value={String(system.id)}
+              >
+                {system.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
     </div>
   )
 }

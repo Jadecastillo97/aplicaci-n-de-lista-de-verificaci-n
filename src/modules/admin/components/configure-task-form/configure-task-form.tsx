@@ -16,7 +16,7 @@ import { ISystem, ITask } from "@/types"
 import { taskSchema } from "@/modules/core/schemas/TaskListSchema"
 import { Textarea } from "@/components/ui/textarea"
 import { useEffect, useState } from "react"
-import { fetchSystems } from "@/api"
+import { fetchSystems, saveOrUpdateTask } from "@/api"
 
 // Define the form schema using Zod
 const formSchema = taskSchema
@@ -56,9 +56,8 @@ export const UpdateTaskForm = ({ dataDetail }: UpdateTaskFormProps) => {
     fetchSystemsData()
   }, [])
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log("Form submitted successfully:", data)
-    // Add your update logic here
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    await saveOrUpdateTask(data, dataDetail?.id)
   }
 
   return (

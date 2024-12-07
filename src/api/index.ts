@@ -18,7 +18,7 @@ import {
   fetchTasksByTaskListId,
   fetchTasksByTaskListDetailsId,
   fetchTasksByTaskListDetails,
-  updateTaskMany
+  saveOrUpdateTask
 } from "./fetchTask"
 
 export {
@@ -36,5 +36,5 @@ export {
   fetchTasksByTaskListId,
   fetchTasksByTaskListDetailsId,
   fetchTasksByTaskListDetails,
-  updateTaskMany
+  saveOrUpdateTask
 }

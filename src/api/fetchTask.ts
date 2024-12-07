@@ -3,6 +3,8 @@ import { createClient } from "@/utils/supabase/server"
 import { cookies } from "next/headers"
 import { TaskMany } from "@/modules/core/schemas/TaskListSchema"
 import { revalidatePath } from "next/cache"
+import { taskSchema } from "@/modules/core/schemas/TaskListSchema"
+import { z } from "zod"
 
 export async function fetchTasks(date: string) {
   const supabase = createClient(cookies())
@@ -88,6 +90,20 @@ export async function saveTaskMany(arrayTask: TaskMany) {
   const { data: task, error } = await supabase
     .from("tasks")
     .insert(arrayTask.tasks)
+  revalidatePath("/admin/checklists")
+  return { task, error }
+}
+
+export async function saveOrUpdateTask(
+  data: z.infer<typeof taskSchema>,
+  id?: string
+) {
+  const supabase = createClient(cookies())
+
+  const { data: task, error } = id
+    ? await supabase.from("tasks").update(data).eq("id", id)
+    : await supabase.from("tasks").insert(data)
+
   revalidatePath("/admin/checklists")
   return { task, error }
 }

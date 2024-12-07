@@ -37,7 +37,6 @@ const taskSchema = z.object({
   description: z.string().min(1, "La descripción es requerida"),
   status: z.enum(["OK", "NOK"], { required_error: "El estado es requerido" }),
   frequency: z.string().min(1, "La frecuencia es requerida"),
-  evidence: z.string().optional(),
   notes: z.string().optional()
 })
 
@@ -69,14 +68,13 @@ export const RegisterChecklistForm = () => {
           description: "",
           status: "OK",
           frequency: "",
-          evidence: "",
           notes: ""
         }
       ]
     }
   })
 
-  const { fields, append } = useFieldArray({ control, name: "tasks" })
+  const { fields, append, remove } = useFieldArray({ control, name: "tasks" })
 
   const fetchSystemsData = async () => {
     const { systems } = await fetchSystems()
@@ -160,6 +158,7 @@ export const RegisterChecklistForm = () => {
                       shouldValidate: true
                     })
                   }
+                  defaultValue="OK"
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Estado" />
@@ -185,30 +184,36 @@ export const RegisterChecklistForm = () => {
                   </p>
                 )}
 
-                <Input
-                  type="file"
-                  accept="image/*"
-                  {...register(`tasks.${index}.evidence`)}
-                />
                 <Textarea
                   placeholder="Notas"
                   {...register(`tasks.${index}.notes`)}
                 />
               </div>
             ))}
-            <Button
-              onClick={() =>
-                append({
-                  description: "",
-                  status: "OK",
-                  frequency: "",
-                  evidence: "",
-                  notes: ""
-                })
-              }
-            >
-              Añadir otra tarea
-            </Button>
+            <footer className="flex gap-3 justify-start">
+              <Button
+                variant="outline"
+                onClick={() => fields.length > 1 && remove(fields.length - 1)}
+                disabled={fields.length <= 1}
+                type="button"
+              >
+                Quitar tarea
+              </Button>
+              <Button
+                onClick={() =>
+                  append({
+                    description: "",
+                    status: "OK",
+                    frequency: "",
+                    notes: ""
+                  })
+                }
+                type="button"
+                disabled={Object.keys(errors.tasks || {}).length > 0}
+              >
+                Añadir otra tarea
+              </Button>
+            </footer>
           </div>
         )
       case 3:
@@ -230,7 +235,6 @@ export const RegisterChecklistForm = () => {
                 <p>Descripción: {task.description}</p>
                 <p>Estado: {task.status}</p>
                 <p>Frecuencia: {task.frequency}</p>
-                {task.evidence && <p>Evidencia: {task.evidence}</p>}
                 <p>Notas: {task.notes}</p>
               </div>
             ))}
@@ -243,37 +247,45 @@ export const RegisterChecklistForm = () => {
 
   return (
     <>
-      <Card className="w-full max-w-2xl mx-auto mt-10">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold">
-            Registrar un nuevo checklist
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Progress
-            value={(step / 3) * 100}
-            className="mb-4"
-          />
-          <form onSubmit={handleSubmit(onSubmit)}>{renderStep()}</form>
-        </CardContent>
-        <CardFooter className="flex justify-between">
-          {step > 1 && (
-            <Button
-              variant="outline"
-              onClick={() => setStep(step - 1)}
-            >
-              Anterior
-            </Button>
-          )}
-          {step < 3 ? (
-            <Button onClick={() => setStep(step + 1)}>Siguiente</Button>
-          ) : (
-            <Button type="submit">Confirmar</Button>
-          )}
-        </CardFooter>
-      </Card>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Card className="w-full max-w-2xl mx-auto mt-10">
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold">
+              Registrar un nuevo checklist
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Progress
+              value={(step / 3) * 100}
+              className="mb-4"
+            />
+            {renderStep()}
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            {step > 1 && (
+              <Button
+                variant="outline"
+                onClick={() => setStep(step - 1)}
+                type="button"
+              >
+                Anterior
+              </Button>
+            )}
+            {step < 3 ? (
+              <Button
+                onClick={() => setStep(step + 1)}
+                disabled={step === 1 && !watch("selectedSystem")}
+                type="button"
+              >
+                Siguiente
+              </Button>
+            ) : (
+              <Button type="submit">Confirmar</Button>
+            )}
+          </CardFooter>
+        </Card>
+      </form>
 
-      {/* Confirmation Dialog */}
       <Dialog
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}

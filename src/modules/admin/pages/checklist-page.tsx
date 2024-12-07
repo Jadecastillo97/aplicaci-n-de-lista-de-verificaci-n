@@ -98,6 +98,12 @@ export const ChecklistsView = (props: ChecklistProps) => {
             New Checklist
           </Link>
         </Button>
+        <Button
+          variant="outline"
+          asChild
+        >
+          <Link href="/admin/checklist/export">Export as PDF</Link>
+        </Button>
       </div>
       <Table>
         <TableHeader>

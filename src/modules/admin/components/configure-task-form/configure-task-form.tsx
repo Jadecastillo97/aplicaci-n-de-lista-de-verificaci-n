@@ -19,6 +19,7 @@ import { useEffect, useState } from "react"
 import { fetchSystems, saveOrUpdateTask } from "@/api"
 import { useRouter } from "next/navigation"
 import { Loader } from "lucide-react"
+import { format } from "date-fns"
 
 // Define the form schema using Zod
 const formSchema = taskSchema
@@ -72,21 +73,20 @@ export const UpdateTaskForm = ({ dataDetail }: UpdateTaskFormProps) => {
   return (
     <Card className="w-full max-w-md mx-auto mt-10">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold">Update Task</CardTitle>
+        <CardTitle className="text-2xl font-bold">
+          {`
+          ${dataDetail ? "Editar tarea" : "Añadir tarea"} del ${format(
+            new Date(),
+            "yyyy-MM-dd"
+          )}
+         `}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-4"
         >
-          {/* Date */}
-          <div>
-            <Input
-              type="date"
-              {...register("date")}
-              disabled
-            />
-          </div>
           {/* System ID */}
           <div>
             <Controller
@@ -122,7 +122,7 @@ export const UpdateTaskForm = ({ dataDetail }: UpdateTaskFormProps) => {
           </div>
           {/* Task Description */}
           <div>
-            <Input
+            <Textarea
               placeholder="Task Description"
               {...register("description")}
             />
@@ -185,6 +185,14 @@ export const UpdateTaskForm = ({ dataDetail }: UpdateTaskFormProps) => {
           >
             {isLoading && <Loader className="animate-spin" />}
             {dataDetail ? "Editar tarea" : "Añadir tarea"}
+          </Button>
+          <Button
+            type="button"
+            className="w-full"
+            variant="outline"
+            onClick={() => router.push("/admin/checklist")}
+          >
+            Cancel
           </Button>
         </form>
       </CardContent>

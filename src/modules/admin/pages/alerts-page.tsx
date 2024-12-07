@@ -19,6 +19,7 @@ import {
 import { ISystem } from "@/types"
 import { format } from "date-fns"
 import { Input } from "@/components/ui/input"
+import Link from "next/link"
 
 interface PropsPage {
   data: ISystem[]
@@ -44,6 +45,7 @@ export const AlertsView = (props: PropsPage) => {
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-2xl font-bold mb-5">Sistemas diarios</h1>
+
       <div className="mb-4 flex justify-between">
         <Select
           onValueChange={setFilter}
@@ -58,7 +60,7 @@ export const AlertsView = (props: PropsPage) => {
             <SelectItem value="false">Inactivos</SelectItem>
           </SelectContent>
         </Select>
-        <div>
+        <div className="flex items-center gap-2">
           <Input
             type="text"
             placeholder="Buscar por nombre..."
@@ -66,6 +68,12 @@ export const AlertsView = (props: PropsPage) => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
+          <Button
+            size="sm"
+            asChild
+          >
+            <Link href="/admin/alerts/create">Agregar sistema</Link>
+          </Button>
         </div>
       </div>
       <Table>

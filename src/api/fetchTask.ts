@@ -4,12 +4,13 @@ import { cookies } from "next/headers"
 import { TaskMany } from "@/modules/core/schemas/TaskListSchema"
 import { revalidatePath } from "next/cache"
 
-export async function fetchTasks() {
+export async function fetchTasks(date: string) {
   const supabase = createClient(cookies())
 
   const { data: tasks, error } = await supabase
     .from("tasks")
     .select("*, system:system_id(*)")
+    .eq("date", date)
     .order("created_at", { ascending: false })
 
   return { tasks, error }

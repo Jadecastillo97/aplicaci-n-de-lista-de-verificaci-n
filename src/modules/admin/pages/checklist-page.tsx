@@ -12,7 +12,9 @@ import {
 } from "@/components/ui/table"
 import { ITask } from "@/types"
 import { format } from "date-fns"
-
+import { Edit, ImagePlus, Plus } from "lucide-react"
+import Link from "next/link"
+import { useSearchParams, useRouter, usePathname } from "next/navigation"
 interface ChecklistProps {
   data: ITask[]
 }
@@ -20,6 +22,17 @@ interface ChecklistProps {
 export const ChecklistsView = (props: ChecklistProps) => {
   const { data } = props
   const [search, setSearch] = useState("")
+
+  const searchParams = useSearchParams()
+  const pathname = usePathname()
+  const router = useRouter()
+
+  const dateValue = searchParams.get("date") || new Date().toISOString()
+  const newDate = new Date(dateValue)
+  if (searchParams.get("date")) {
+    newDate.setDate(newDate.getDate() + 1)
+  }
+  const formattedDate = format(newDate, "yyyy-MM-dd")
 
   // Filtrar los datos según el término de búsqueda
   const filteredChecklists = data.filter(
@@ -42,10 +55,23 @@ export const ChecklistsView = (props: ChecklistProps) => {
     {} as Record<string, ITask[]>
   )
 
+  const handleDateChange = (date: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    if (date) {
+      const newDate = new Date(date)
+      newDate.setDate(newDate.getDate() + 1)
+      params.set("date", format(newDate, "yyyy-MM-dd"))
+    } else {
+      params.delete("date")
+    }
+    router.push(`${pathname}?${params.toString()}`)
+  }
+
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-2xl font-bold mb-5">Daily Checklists</h1>
-      <div className="mb-4">
+
+      <div className="mb-4 flex gap-4">
         <Input
           type="text"
           placeholder="Search by system, description, or date"
@@ -53,6 +79,24 @@ export const ChecklistsView = (props: ChecklistProps) => {
           onChange={(e) => setSearch(e.target.value)}
           className="max-w-sm"
         />
+
+        <Input
+          type="date"
+          value={formattedDate}
+          onChange={(e) => handleDateChange(e.target.value)}
+          className="max-w-[200px]"
+          max={format(new Date(), "yyyy-MM-dd")}
+        />
+
+        <Button
+          disabled={!(formattedDate === format(new Date(), "yyyy-MM-dd"))}
+          asChild
+        >
+          <Link href="/admin/checklist/create">
+            <Plus size={20} />
+            New Checklist
+          </Link>
+        </Button>
       </div>
       <Table>
         <TableHeader>
@@ -60,6 +104,8 @@ export const ChecklistsView = (props: ChecklistProps) => {
             <TableHead>System Name</TableHead>
             <TableHead>Description</TableHead>
             <TableHead>Date</TableHead>
+            <TableHead>Frecuencia</TableHead>
+            <TableHead>Notas</TableHead>
             <TableHead>OK / NOK</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
@@ -76,14 +122,35 @@ export const ChecklistsView = (props: ChecklistProps) => {
                 <TableCell>
                   {format(new Date(checklist.date), "MM/dd/yyyy")}
                 </TableCell>
+                <TableCell>{checklist.frequency}</TableCell>
+                <TableCell className="max-w-xs truncate">
+                  <div
+                    className="line-clamp-3 min-w-[200px] max-w-[200px]"
+                    title={checklist.notes}
+                  >
+                    {checklist.notes}
+                  </div>
+                </TableCell>
                 <TableCell>{checklist.status ? "OK" : "NOK"}</TableCell>
-                <TableCell>
+                <TableCell className="flex gap-2">
                   <Button
                     variant="outline"
-                    size="sm"
+                    size="icon"
                   >
-                    View Details
+                    <Edit size={20} />
                   </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                  >
+                    <ImagePlus size={20} />
+                  </Button>
+                  {/* <Button
+                    variant="outline"
+                    size="icon"
+                  >
+                    <Info size={20} />
+                  </Button> */}
                 </TableCell>
               </TableRow>
             ))

@@ -15,6 +15,7 @@ import { format } from "date-fns"
 import { Edit, ImagePlus, Plus } from "lucide-react"
 import Link from "next/link"
 import { useSearchParams, useRouter, usePathname } from "next/navigation"
+import { Badge } from "@/components/ui/badge"
 interface ChecklistProps {
   data: ITask[]
 }
@@ -131,7 +132,17 @@ export const ChecklistsView = (props: ChecklistProps) => {
                     {checklist.notes}
                   </div>
                 </TableCell>
-                <TableCell>{checklist.status ? "OK" : "NOK"}</TableCell>
+                <TableCell>
+                  <Badge
+                    className={`rounded-full text-xs font-semibold ${
+                      checklist.status
+                        ? "bg-lime-300 text-black dark:bg-lime-400 dark:text-gray-800"
+                        : "bg-red-500 dark:bg-red-600"
+                    }`}
+                  >
+                    {checklist.status ? "OK" : "NOK"}
+                  </Badge>
+                </TableCell>
                 <TableCell className="flex gap-2">
                   <Button
                     variant="outline"

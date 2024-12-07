@@ -17,6 +17,8 @@ import { taskSchema } from "@/modules/core/schemas/TaskListSchema"
 import { Textarea } from "@/components/ui/textarea"
 import { useEffect, useState } from "react"
 import { fetchSystems, saveOrUpdateTask } from "@/api"
+import { useRouter } from "next/navigation"
+import { Loader } from "lucide-react"
 
 // Define the form schema using Zod
 const formSchema = taskSchema
@@ -44,6 +46,8 @@ export const UpdateTaskForm = ({ dataDetail }: UpdateTaskFormProps) => {
   })
 
   const [systems, setSystems] = useState<ISystem[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
 
   const fetchSystemsData = async () => {
     const { systems } = await fetchSystems()
@@ -57,7 +61,12 @@ export const UpdateTaskForm = ({ dataDetail }: UpdateTaskFormProps) => {
   }, [])
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    await saveOrUpdateTask(data, dataDetail?.id)
+    setIsLoading(true)
+    const { task, error } = await saveOrUpdateTask(data, dataDetail?.id)
+    if (task && !error) {
+      router.push("/admin/checklist")
+    }
+    setIsLoading(false)
   }
 
   return (
@@ -172,7 +181,9 @@ export const UpdateTaskForm = ({ dataDetail }: UpdateTaskFormProps) => {
           <Button
             type="submit"
             className="w-full"
+            disabled={isLoading}
           >
+            {isLoading && <Loader className="animate-spin" />}
             {dataDetail ? "Editar tarea" : "Añadir tarea"}
           </Button>
         </form>

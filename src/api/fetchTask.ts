@@ -101,9 +101,13 @@ export async function saveOrUpdateTask(
   const supabase = createClient(cookies())
 
   const { data: task, error } = id
-    ? await supabase.from("tasks").update(data).eq("id", id)
-    : await supabase.from("tasks").insert(data)
-
+    ? await supabase
+        .from("tasks")
+        .update(data)
+        .eq("id", id)
+        .select("*")
+        .single()
+    : await supabase.from("tasks").insert(data).select("*").single()
   revalidatePath("/admin/checklists")
   return { task, error }
 }

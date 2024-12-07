@@ -71,6 +71,14 @@ export const UpdateTaskForm = ({ dataDetail }: UpdateTaskFormProps) => {
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-4"
         >
+          {/* Date */}
+          <div>
+            <Input
+              type="date"
+              {...register("date")}
+              disabled
+            />
+          </div>
           {/* System ID */}
           <div>
             <Controller
@@ -158,14 +166,7 @@ export const UpdateTaskForm = ({ dataDetail }: UpdateTaskFormProps) => {
             <Textarea
               placeholder="Notes (optional)"
               {...register("notes")}
-            />
-          </div>
-
-          {/* Date */}
-          <div>
-            <Input
-              type="date"
-              {...register("date")}
+              rows={8}
             />
           </div>
 
@@ -173,7 +174,7 @@ export const UpdateTaskForm = ({ dataDetail }: UpdateTaskFormProps) => {
             type="submit"
             className="w-full"
           >
-            Save Changes
+            {dataDetail ? "Editar tarea" : "Añadir tarea"}
           </Button>
         </form>
       </CardContent>

@@ -86,7 +86,6 @@ export const RegisterChecklistForm = () => {
     const { task } = await saveTaskMany({
       tasks: watch("tasks")
     })
-    console.log("Checklist saved", task)
   }
 
   const renderStep = () => {
@@ -109,8 +108,8 @@ export const RegisterChecklistForm = () => {
                   required: "Debes seleccionar una fecha"
                 })}
               />
-              {errors.date && (
-                <p className="text-red-500 text-sm">{errors.date.message}</p>
+              {errors?.date && (
+                <p className="text-red-500 text-sm">{errors?.date?.message}</p>
               )}
             </div>
             <div className="space-y-4">
@@ -139,9 +138,9 @@ export const RegisterChecklistForm = () => {
                   ))}
                 </SelectContent>
               </Select>
-              {errors.selectedSystem && (
+              {errors && errors?.selectedSystem && (
                 <p className="text-red-500 text-sm">
-                  {errors.selectedSystem.message}
+                  {errors?.selectedSystem?.message}
                 </p>
               )}
             </div>
@@ -160,9 +159,9 @@ export const RegisterChecklistForm = () => {
                   {...register(`tasks.${index}.description`)}
                   rows={5}
                 />
-                {errors.tasks?.[index]?.description && (
+                {errors?.tasks?.[index]?.description && (
                   <p className="text-red-500 text-sm">
-                    {errors.tasks[index].description?.message}
+                    {errors?.tasks[index]?.description?.message}
                   </p>
                 )}
 
@@ -186,9 +185,9 @@ export const RegisterChecklistForm = () => {
                     <SelectItem value="false">NOK</SelectItem>
                   </SelectContent>
                 </Select>
-                {errors.tasks?.[index]?.status && (
+                {errors && errors?.tasks?.[index]?.status && (
                   <p className="text-red-500 text-sm">
-                    {errors.tasks[index].status?.message}
+                    {errors && errors?.tasks[index]?.status?.message}
                   </p>
                 )}
 
@@ -196,9 +195,9 @@ export const RegisterChecklistForm = () => {
                   placeholder="Frecuencia"
                   {...register(`tasks.${index}.frequency`)}
                 />
-                {errors.tasks?.[index]?.frequency && (
+                {errors && errors?.tasks?.[index]?.frequency && (
                   <p className="text-red-500 text-sm">
-                    {errors.tasks[index].frequency?.message}
+                    {errors && errors?.tasks[index]?.frequency?.message}
                   </p>
                 )}
 
@@ -229,7 +228,7 @@ export const RegisterChecklistForm = () => {
                   })
                 }
                 type="button"
-                disabled={Object.keys(errors.tasks || {}).length > 0}
+                disabled={Object.keys(errors?.tasks || {}).length > 0}
               >
                 Añadir otra tarea
               </Button>

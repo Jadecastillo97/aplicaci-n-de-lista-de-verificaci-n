@@ -16,7 +16,7 @@ import { Edit, ImagePlus, Plus } from "lucide-react"
 import Link from "next/link"
 import { useSearchParams, useRouter, usePathname } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
-import * as XLSX from "xlsx" // Importar SheetJS
+import ExcelJS from "exceljs"
 
 interface ChecklistProps {
   data: ITask[]
@@ -72,82 +72,88 @@ export const ChecklistsView = (props: ChecklistProps) => {
 
   // Exportar datos a Excel
   const exportToExcel = () => {
-    const rows: any[] = []
+    const formattedDate = format(new Date(), "MM/dd/yyyy")
+    const NAME_OF_SHEET = `Checklists ${formattedDate}`
+    const workbook = new ExcelJS.Workbook()
+    const worksheet = workbook.addWorksheet("Checklists")
 
-    // Agregar una cabecera principal
-    rows.push([
-      `Check List diario - Fecha: ${format(new Date(), "MM/dd/yyyy")}`
-    ])
-    rows.push([]) // Fila vacía para separación
+    // Agregar la cabecera principal
+    const titleRow = worksheet.addRow([`Checklist - Fecha: ${formattedDate}`])
+    titleRow.font = { bold: true, size: 40 }
+    worksheet.mergeCells("A1:E1") // Fusionar las celdas desde A1 hasta E1
+    titleRow.alignment = { vertical: "middle", horizontal: "center" }
 
     // Agregar encabezados de columnas
-    rows.push(["Sistema", "Descripción", "Frecuencia", "OK/NOK", "Notas"])
+    const headers = [
+      "Sistema",
+      "Descripción",
+      "Frecuencia",
+      "OK / NOK",
+      "Notas"
+    ]
+    const headerRow = worksheet.addRow(headers)
 
-    // Agregar datos agrupados por sistema
-    Object.entries(groupedChecklists).forEach(([systemName, tasks]) => {
-      tasks.forEach((checklist, index) => {
-        rows.push([
-          index === 0 ? systemName : "", // Mostrar el nombre del sistema solo una vez
-          checklist.description,
-          checklist.frequency,
-          checklist.status ? "OK" : "NOK",
-          checklist.notes
+    // Estilizar la fila de encabezados
+    headerRow.eachCell((cell) => {
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "000000" }
+      }
+      cell.font = {
+        bold: true,
+        color: { argb: "FFFFFF" },
+        size: 12
+      }
+      cell.alignment = { vertical: "middle", horizontal: "center" }
+    })
+
+    // Agrupar datos por sistema
+    const groupedData: Record<string, ITask[]> = data.reduce(
+      (acc: Record<string, ITask[]>, task) => {
+        if (!acc[task.system.name]) acc[task.system.name] = []
+        acc[task.system.name].push(task)
+        return acc
+      },
+      {} as Record<string, ITask[]>
+    )
+
+    // Agregar datos al worksheet agrupados por sistema
+    Object.entries(groupedData).forEach(([systemName, tasks]) => {
+      tasks.forEach((task, index) => {
+        worksheet.addRow([
+          index === 0 ? systemName : "", // Mostrar el sistema solo en la primera fila
+          task.description,
+          task.frequency,
+          task.status ? "OK" : "NOK",
+          task.notes
         ])
       })
     })
 
-    // Crear hoja de trabajo
-    const worksheet = XLSX.utils.aoa_to_sheet(rows)
-
-    // Estilos personalizados
-    const range = XLSX.utils.decode_range(worksheet["!ref"] || "A1")
-
-    // Aplicar estilo a la cabecera principal (fuente 32 y negrita)
-    worksheet["A1"].s = {
-      font: {
-        bold: true,
-        sz: 32 // Tamaño de fuente
-      },
-      alignment: {
-        horizontal: "center", // Centrar horizontalmente
-        vertical: "center" // Centrar verticalmente
+    // Ajustar el ancho de las columnas automáticamente
+    worksheet.columns.forEach((column) => {
+      let maxLength = 0
+      if (column.eachCell) {
+        column.eachCell({ includeEmpty: true }, (cell) => {
+          const cellValue = cell.value ? cell.value.toString() : ""
+          maxLength = Math.max(maxLength, cellValue.length)
+        })
       }
-    }
+      column.width = maxLength + 2 // Agregar un margen
+    })
 
-    // Aplicar negrita a los encabezados de las columnas
-    for (let col = range.s.c; col <= range.e.c; col++) {
-      const cellAddress = XLSX.utils.encode_cell({ r: 2, c: col }) // Fila 3 (r: 2) contiene los encabezados
-      if (worksheet[cellAddress]) {
-        worksheet[cellAddress].s = {
-          font: {
-            bold: true
-          },
-          alignment: {
-            horizontal: "center"
-          }
-        }
-      }
-    }
-
-    // Ajustar ancho de columnas automáticamente
-    worksheet["!cols"] = [
-      { wch: 20 }, // Sistema
-      { wch: 40 }, // Descripción
-      { wch: 15 }, // Frecuencia
-      { wch: 10 }, // OK/NOK
-      { wch: 50 } // Notas
-    ]
-
-    // Crear libro de trabajo y agregar hoja
-    const workbook = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(
-      workbook,
-      worksheet,
-      `Check List - ${formattedDate}`
-    )
-
-    // Descargar archivo
-    XLSX.writeFile(workbook, "checklists.xlsx")
+    // Descargar el archivo Excel
+    workbook.xlsx.writeBuffer().then((buffer) => {
+      const blob = new Blob([buffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = `${NAME_OF_SHEET}.xlsx`
+      a.click()
+    })
   }
 
   return (

@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -19,12 +19,8 @@ import {
 } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 
-// Mock data for systems
-const systems = [
-  { id: 1, name: "System A" },
-  { id: 2, name: "System B" },
-  { id: 3, name: "System C" }
-]
+import { fetchSystems } from "@/api"
+import { ISystem } from "@/types"
 
 export const RegisterChecklistForm = () => {
   const [step, setStep] = useState(1)
@@ -32,6 +28,18 @@ export const RegisterChecklistForm = () => {
   const [tasks, setTasks] = useState([
     { description: "", status: "", notes: "" }
   ])
+
+  const [systems, setSystems] = useState<ISystem[]>([])
+
+  useEffect(() => {
+    const fetchSystemsData = async () => {
+      const { systems } = await fetchSystems()
+      if (systems) {
+        setSystems(systems)
+      }
+    }
+    fetchSystemsData()
+  }, [])
 
   const handleAddTask = () => {
     setTasks([...tasks, { description: "", status: "", notes: "" }])
@@ -58,14 +66,14 @@ export const RegisterChecklistForm = () => {
               htmlFor="system"
               className="text-sm font-medium"
             >
-              Select System
+              Selecciona un sistema
             </label>
             <Select
               onValueChange={setSelectedSystem}
               required
             >
               <SelectTrigger>
-                <SelectValue placeholder="Choose a system" />
+                <SelectValue placeholder="Selecciona un system" />
               </SelectTrigger>
               <SelectContent>
                 {systems.map((system) => (
@@ -151,7 +159,7 @@ export const RegisterChecklistForm = () => {
     <Card className="w-full max-w-2xl mx-auto mt-10">
       <CardHeader>
         <CardTitle className="text-2xl font-bold">
-          Register New Checklist
+          Registra un nuevo checklist
         </CardTitle>
       </CardHeader>
       <CardContent>

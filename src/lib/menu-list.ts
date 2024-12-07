@@ -53,7 +53,7 @@ export function getMenuList(pathname: string): Group[] {
               label: "Lista de Checklists"
             },
             {
-              href: "/admin/checklist/new",
+              href: "/admin/checklist/create",
               label: "Iniciar Checklist"
             }
           ]

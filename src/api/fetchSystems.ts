@@ -2,6 +2,7 @@
 import { createClient } from "@/utils/supabase/server"
 import { cookies } from "next/headers"
 import { ISystemForm } from "@/types"
+import { revalidatePath } from "next/cache"
 
 export async function fetchSystems() {
   const supabase = createClient(cookies())
@@ -17,6 +18,7 @@ export async function saveSystem(data: ISystemForm) {
   const supabase = createClient(cookies())
 
   const { data: system, error } = await supabase.from("systems").insert(data)
+  revalidatePath("/admin/alerts")
   return { system, error }
 }
 
@@ -27,6 +29,7 @@ export async function updateSystem(id: string, data: ISystemForm) {
     .from("systems")
     .update(data)
     .eq("id", id)
+  revalidatePath("/admin/alerts")
   return { system, error }
 }
 

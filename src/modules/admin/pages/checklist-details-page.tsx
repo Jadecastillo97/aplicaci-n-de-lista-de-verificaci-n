@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import { Button } from "@/components/ui/button"
 import {
   Table,
@@ -15,6 +15,7 @@ import {
   CardHeader,
   CardTitle
 } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 
 // Mock data for a checklist
 const checklist = {
@@ -78,7 +79,17 @@ export const ChecklistDetailView = () => {
             {checklist.tasks.map((task) => (
               <TableRow key={task.id}>
                 <TableCell>{task.description}</TableCell>
-                <TableCell>{task.status}</TableCell>
+                <TableCell>
+                  <Badge
+                    className={
+                      task.status
+                        ? "bg-green-500 dark:bg-green-600"
+                        : "bg-red-500 dark:bg-red-600"
+                    }
+                  >
+                    {task.status ? "Activo" : "Inactivo"}
+                  </Badge>
+                </TableCell>
                 <TableCell>{task.notes}</TableCell>
               </TableRow>
             ))}

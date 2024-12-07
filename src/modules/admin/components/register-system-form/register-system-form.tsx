@@ -27,6 +27,10 @@ import {
   DialogHeader,
   DialogTitle
 } from "@/components/ui/dialog"
+import { ISystem } from "@/types"
+import { saveSystem, updateSystem } from "@/api"
+import { Loader } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 // Define schema with zod
 export const systemFormSchema = z.object({
@@ -38,12 +42,16 @@ export const systemFormSchema = z.object({
 type SystemFormData = z.infer<typeof systemFormSchema>
 
 interface RegisterSystemFormProps {
-  defaultValues?: SystemFormData
+  defaultValues?: ISystem
 }
 
-export const RegisterSystemForm = () => {
+export const RegisterSystemForm = (props: RegisterSystemFormProps) => {
+  const { defaultValues } = props
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [formData, setFormData] = useState<SystemFormData | null>(null)
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  const router = useRouter()
 
   const {
     register,
@@ -55,9 +63,9 @@ export const RegisterSystemForm = () => {
   } = useForm<SystemFormData>({
     resolver: zodResolver(systemFormSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      status: true
+      name: defaultValues?.name || "",
+      description: defaultValues?.description || "",
+      status: defaultValues?.status || true
     }
   })
 
@@ -66,12 +74,20 @@ export const RegisterSystemForm = () => {
     setIsDialogOpen(true)
   }
 
-  const confirmSubmit = () => {
+  const confirmSubmit = async () => {
+    setIsLoaded(true)
     if (formData) {
-      console.log("Form submitted", formData)
+      if (defaultValues) {
+        await updateSystem(defaultValues.id, formData)
+      } else {
+        await saveSystem(formData)
+      }
+
       reset()
+      router.push("/admin/alerts")
       setIsDialogOpen(false)
     }
+    setIsLoaded(false)
   }
 
   const status = watch("status")
@@ -81,7 +97,7 @@ export const RegisterSystemForm = () => {
       <Card className="w-full max-w-md mx-auto mt-10">
         <CardHeader>
           <CardTitle className="text-2xl font-bold">
-            Register New System
+            {defaultValues ? "Editar sistema" : "Actualizar Sistema"}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -94,7 +110,7 @@ export const RegisterSystemForm = () => {
                 htmlFor="systemName"
                 className="text-sm font-medium"
               >
-                System Name
+                Nombre del sistema
               </label>
               <Input
                 id="systemName"
@@ -110,7 +126,7 @@ export const RegisterSystemForm = () => {
                 htmlFor="description"
                 className="text-sm font-medium"
               >
-                Description
+                Descripción del sistema
               </label>
               <Textarea
                 id="description"
@@ -128,7 +144,7 @@ export const RegisterSystemForm = () => {
                 htmlFor="status"
                 className="text-sm font-medium"
               >
-                Status
+                Estado
               </label>
               <Select
                 onValueChange={(value) =>
@@ -148,19 +164,23 @@ export const RegisterSystemForm = () => {
                 <p className="text-red-500 text-sm">Status is required</p>
               )}
             </div>
-            <div className="mt-4">
-              <Button type="submit">Save</Button>
+            <div className="mt-4 flex justify-between">
+              <Button
+                variant="outline"
+                onClick={() => reset()}
+              >
+                Reset
+              </Button>
+              <Button
+                type="submit"
+                disabled={isLoaded}
+              >
+                {isLoaded ? <Loader className="animate-spin" /> : null}
+                {defaultValues ? "Update System" : "Register System"}
+              </Button>
             </div>
           </form>
         </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button
-            variant="outline"
-            onClick={() => reset()}
-          >
-            Reset
-          </Button>
-        </CardFooter>
       </Card>
 
       {/* Confirmation Dialog */}

@@ -20,6 +20,8 @@ import { ISystem } from "@/types"
 import { format } from "date-fns"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
+import { Badge } from "@/components/ui/badge"
+import { Edit } from "lucide-react"
 
 interface PropsPage {
   data: ISystem[]
@@ -92,14 +94,27 @@ export const AlertsView = (props: PropsPage) => {
               <TableCell>{alert.description}</TableCell>
               <TableCell>{alert.name}</TableCell>
               <TableCell>{format(alert?.created_at, "dd/MM/yyyy")}</TableCell>
-              <TableCell>{alert.status ? "Activo" : "Inactivo"}</TableCell>
               <TableCell>
-                {!alert.status && (
+                <Badge
+                  className={`rounded-full text-xs font-semibold ${
+                    alert.status
+                      ? "bg-lime-300 text-black dark:bg-lime-400 dark:text-gray-800"
+                      : "bg-red-500 dark:bg-red-600"
+                  }`}
+                >
+                  {alert.status ? "Activo" : "Inactivo"}
+                </Badge>
+              </TableCell>
+              <TableCell>
+                {alert.status && (
                   <Button
                     variant="outline"
-                    size="sm"
+                    size="icon"
+                    asChild
                   >
-                    Mark as Resolved
+                    <Link href={`/admin/alerts/${alert.id}/edit`}>
+                      <Edit size={16} />
+                    </Link>
                   </Button>
                 )}
               </TableCell>

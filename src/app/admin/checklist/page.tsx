@@ -13,7 +13,6 @@ export default async function page(props: PropsPage) {
   const { searchParams } = props
   const date =
     (searchParams.date as string) || new Date().toISOString().split("T")[0]
-  console.log("date", date)
 
   const { tasks, error } = await fetchTasks(date)
 

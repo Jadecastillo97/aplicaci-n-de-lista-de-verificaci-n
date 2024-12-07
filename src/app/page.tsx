@@ -1,15 +1,9 @@
-import Link from "next/link";
-import Image from "next/image";
-import { PanelsTopLeft } from "lucide-react";
-import { ArrowRightIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
-
-import { Button } from "@/components/ui/button";
-import { ModeToggle } from "@/components/mode-toggle";
+import { LoginForm } from "@/modules/auth"
 
 export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="z-[50] sticky top-0 w-full bg-background/95 border-b backdrop-blur-sm dark:bg-black/[0.6] border-border/40">
+      {/* <header className="z-[50] sticky top-0 w-full bg-background/95 border-b backdrop-blur-sm dark:bg-black/[0.6] border-border/40">
         <div className="container h-14 flex items-center">
           <Link
             href="/"
@@ -120,7 +114,8 @@ export default function HomePage() {
             .
           </p>
         </div>
-      </footer>
+      </footer> */}
+      <LoginForm />
     </div>
-  );
+  )
 }

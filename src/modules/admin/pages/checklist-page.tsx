@@ -1,3 +1,4 @@
+"use client"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -38,7 +39,7 @@ const checklists = [
   // Add more mock data as needed
 ]
 
-export default function ChecklistsView() {
+export const ChecklistsView = () => {
   const [search, setSearch] = useState("")
 
   const filteredChecklists = checklists.filter(

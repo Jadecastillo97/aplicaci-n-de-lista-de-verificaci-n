@@ -21,7 +21,7 @@ export const AdminDashboard = () => {
             Sistemas
           </Link>
           <Link
-            href="/checklists"
+            href="/admin/checklist"
             className="mt-1 group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-100 transition ease-in-out duration-150"
           >
             <CheckSquare className="mr-4 h-6 w-6 text-gray-400 group-hover:text-gray-500" />

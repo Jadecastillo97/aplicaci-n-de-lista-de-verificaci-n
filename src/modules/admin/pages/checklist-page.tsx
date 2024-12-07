@@ -10,42 +10,21 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table"
-// import {
-//   Pagination,
-//   PaginationContent,
-//   PaginationEllipsis,
-//   PaginationItem,
-//   PaginationLink,
-//   PaginationNext,
-//   PaginationPrevious
-// } from "@/components/ui/pagination"
+import { ITask } from "@/types"
 
-// Mock data
-const checklists = [
-  {
-    id: 1,
-    systemName: "System A",
-    operatorName: "John Doe",
-    date: "2023-05-01",
-    status: "OK"
-  },
-  {
-    id: 2,
-    systemName: "System B",
-    operatorName: "Jane Smith",
-    date: "2023-05-02",
-    status: "NOK"
-  }
-  // Add more mock data as needed
-]
+interface ChecklistProps {
+  data: ITask[]
+}
 
-export const ChecklistsView = () => {
+export const ChecklistsView = (props: ChecklistProps) => {
+  const { data } = props
   const [search, setSearch] = useState("")
 
-  const filteredChecklists = checklists.filter(
+  const filteredChecklists = data.filter(
     (checklist) =>
-      checklist.systemName.toLowerCase().includes(search.toLowerCase()) ||
-      checklist.date.includes(search)
+      checklist.description.toLowerCase().includes(search.toLowerCase()) ||
+      checklist.date.includes(search) ||
+      checklist.system.name.toLowerCase().includes(search.toLowerCase())
   )
 
   return (
@@ -54,7 +33,7 @@ export const ChecklistsView = () => {
       <div className="mb-4">
         <Input
           type="text"
-          placeholder="Search by system or date"
+          placeholder="Search by system, description, or date"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="max-w-sm"
@@ -64,7 +43,7 @@ export const ChecklistsView = () => {
         <TableHeader>
           <TableRow>
             <TableHead>System Name</TableHead>
-            <TableHead>Operator Name</TableHead>
+            <TableHead>Description</TableHead>
             <TableHead>Date</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Actions</TableHead>
@@ -73,10 +52,12 @@ export const ChecklistsView = () => {
         <TableBody>
           {filteredChecklists.map((checklist) => (
             <TableRow key={checklist.id}>
-              <TableCell>{checklist.systemName}</TableCell>
-              <TableCell>{checklist.operatorName}</TableCell>
+              <TableCell>{checklist.system.name}</TableCell>
+              <TableCell>{checklist.description}</TableCell>
               <TableCell>{checklist.date}</TableCell>
-              <TableCell>{checklist.status}</TableCell>
+              <TableCell>
+                {checklist.status ? "Completed" : "Pending"}
+              </TableCell>
               <TableCell>
                 <Button
                   variant="outline"
@@ -89,23 +70,6 @@ export const ChecklistsView = () => {
           ))}
         </TableBody>
       </Table>
-      {/* <Pagination className="mt-4">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#" />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="#" />
-          </PaginationItem>
-        </Pagination>
-      </PaginationContent>
-    </Pagination> */}
     </div>
   )
 }

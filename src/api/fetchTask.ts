@@ -2,7 +2,6 @@
 import { createClient } from "@/utils/supabase/server"
 import { cookies } from "next/headers"
 import { TaskMany } from "@/modules/core/schemas/TaskListSchema"
-import { ITask } from "@/types"
 import { revalidatePath } from "next/cache"
 
 export async function fetchTasks() {
@@ -10,7 +9,7 @@ export async function fetchTasks() {
 
   const { data: tasks, error } = await supabase
     .from("tasks")
-    .select("*")
+    .select("*, system:system_id(*)")
     .order("created_at", { ascending: false })
 
   return { tasks, error }

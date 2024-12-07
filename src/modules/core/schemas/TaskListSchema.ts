@@ -27,25 +27,20 @@ export const TaskLisSchema = z.object({
 // })
 
 // export const TaskManySchema = z.array(TaskSchema)
-export const TaskSchema = z.object({
-  id: z.number().optional(),
-  task_list_id: z.number(),
-  system_id: z.number(),
-  chekList: z.string().min(2, {
-    message: "Name must be at least 2 characters."
+export const taskSchema = z.object({
+  description: z.string().min(1, "La descripción es requerida"),
+  status: z.enum(["true", "false"], {
+    required_error: "El estado es requerido"
   }),
-  frecuency: z.string().min(2, {
-    message: "Name must be at least 2 characters."
-  }),
-  review: z.boolean().optional(),
-  note: z.string().optional(),
-  status: z.boolean().optional()
+  frequency: z.string().min(1, "La frecuencia es requerida"),
+  notes: z.string().optional(),
+  system_id: z.number({ message: "El sistema es requerido" })
 })
 
 export const TaskManySchema = z.object({
-  tasks: z.array(TaskSchema)
+  tasks: z.array(taskSchema)
 })
 
 export type TaskList = z.infer<typeof TaskLisSchema>
-export type Task = z.infer<typeof TaskSchema>
+export type Task = z.infer<typeof taskSchema>
 export type TaskMany = z.infer<typeof TaskManySchema>

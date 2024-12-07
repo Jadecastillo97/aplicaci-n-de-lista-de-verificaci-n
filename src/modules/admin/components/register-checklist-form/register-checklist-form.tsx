@@ -31,14 +31,7 @@ import {
 
 import { fetchSystems } from "@/api"
 import { ISystem } from "@/types"
-
-// Define schema with zod
-const taskSchema = z.object({
-  description: z.string().min(1, "La descripción es requerida"),
-  status: z.enum(["OK", "NOK"], { required_error: "El estado es requerido" }),
-  frequency: z.string().min(1, "La frecuencia es requerida"),
-  notes: z.string().optional()
-})
+import { taskSchema } from "@/modules/core/schemas/TaskListSchema"
 
 const checklistFormSchema = z.object({
   selectedSystem: z.string().min(1, "Debes seleccionar un sistema"),
@@ -66,7 +59,7 @@ export const RegisterChecklistForm = () => {
       tasks: [
         {
           description: "",
-          status: "OK",
+          status: "true",
           frequency: "",
           notes: ""
         }
@@ -154,18 +147,22 @@ export const RegisterChecklistForm = () => {
 
                 <Select
                   onValueChange={(value) =>
-                    setValue(`tasks.${index}.status`, value as "OK" | "NOK", {
-                      shouldValidate: true
-                    })
+                    setValue(
+                      `tasks.${index}.status`,
+                      value as "true" | "false",
+                      {
+                        shouldValidate: true
+                      }
+                    )
                   }
-                  defaultValue="OK"
+                  defaultValue="true"
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Estado" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="OK">OK</SelectItem>
-                    <SelectItem value="NOK">NOK</SelectItem>
+                    <SelectItem value="true">OK</SelectItem>
+                    <SelectItem value="false">NOK</SelectItem>
                   </SelectContent>
                 </Select>
                 {errors.tasks?.[index]?.status && (
@@ -203,9 +200,10 @@ export const RegisterChecklistForm = () => {
                 onClick={() =>
                   append({
                     description: "",
-                    status: "OK",
+                    status: "true",
                     frequency: "",
-                    notes: ""
+                    notes: "",
+                    system_id: Number(watch("selectedSystem") || "")
                   })
                 }
                 type="button"
@@ -265,7 +263,12 @@ export const RegisterChecklistForm = () => {
             {step > 1 && (
               <Button
                 variant="outline"
-                onClick={() => setStep(step - 1)}
+                onClick={() => {
+                  setStep(step - 1)
+                  if (step === 2) {
+                    setValue("selectedSystem", "", { shouldValidate: true })
+                  }
+                }}
                 type="button"
               >
                 Anterior

@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from "react"
 import { useForm, useFieldArray } from "react-hook-form"
-import { z } from "zod"
+import { date, z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -36,7 +36,8 @@ import { saveTaskMany } from "@/api"
 
 const checklistFormSchema = z.object({
   selectedSystem: z.string().min(1, "Debes seleccionar un sistema"),
-  tasks: z.array(taskSchema).min(1, "Debes añadir al menos una tarea")
+  tasks: z.array(taskSchema).min(1, "Debes añadir al menos una tarea"),
+  date: z.string().optional()
 })
 
 type ChecklistFormData = z.infer<typeof checklistFormSchema>
@@ -57,7 +58,8 @@ export const RegisterChecklistForm = () => {
     resolver: zodResolver(checklistFormSchema),
     defaultValues: {
       selectedSystem: "",
-      tasks: []
+      tasks: [],
+      date: new Date().toISOString().split("T")[0]
     }
   })
 
@@ -91,38 +93,59 @@ export const RegisterChecklistForm = () => {
     switch (step) {
       case 1:
         return (
-          <div className="space-y-4">
-            <label
-              htmlFor="system"
-              className="text-sm font-medium"
-            >
-              Selecciona un sistema
-            </label>
-            <Select
-              onValueChange={(value) =>
-                setValue("selectedSystem", value, { shouldValidate: true })
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Selecciona un sistema" />
-              </SelectTrigger>
-              <SelectContent>
-                {systems.map((system) => (
-                  <SelectItem
-                    key={system.id}
-                    value={system.id.toString()}
-                  >
-                    {system.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {errors.selectedSystem && (
-              <p className="text-red-500 text-sm">
-                {errors.selectedSystem.message}
-              </p>
-            )}
-          </div>
+          <section>
+            {/* // add date input */}
+            <div>
+              <label
+                htmlFor="date"
+                className="text-sm font-medium"
+              >
+                Fecha
+              </label>
+              <Input
+                type="date"
+                id="date"
+                {...register("date", {
+                  required: "Debes seleccionar una fecha"
+                })}
+              />
+              {errors.date && (
+                <p className="text-red-500 text-sm">{errors.date.message}</p>
+              )}
+            </div>
+            <div className="space-y-4">
+              <label
+                htmlFor="system"
+                className="text-sm font-medium"
+              >
+                Selecciona un sistema
+              </label>
+              <Select
+                onValueChange={(value) =>
+                  setValue("selectedSystem", value, { shouldValidate: true })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecciona un sistema" />
+                </SelectTrigger>
+                <SelectContent>
+                  {systems.map((system) => (
+                    <SelectItem
+                      key={system.id}
+                      value={system.id.toString()}
+                    >
+                      {system.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {errors.selectedSystem && (
+                <p className="text-red-500 text-sm">
+                  {errors.selectedSystem.message}
+                </p>
+              )}
+            </div>
+          </section>
         )
       case 2:
         return (
@@ -200,7 +223,8 @@ export const RegisterChecklistForm = () => {
                     status: "true",
                     frequency: "",
                     notes: "",
-                    system_id: Number(watch("selectedSystem") || "")
+                    system_id: Number(watch("selectedSystem") || ""),
+                    date: watch("date") || ""
                   })
                 }
                 type="button"

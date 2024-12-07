@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { date, z } from "zod"
 
 export const TaskLisSchema = z.object({
   name: z.string().min(2, {
@@ -34,7 +34,8 @@ export const taskSchema = z.object({
   }),
   frequency: z.string().min(1, "La frecuencia es requerida"),
   notes: z.string().optional(),
-  system_id: z.number({ message: "El sistema es requerido" })
+  system_id: z.number({ message: "El sistema es requerido" }),
+  date: z.string().optional()
 })
 
 export const TaskManySchema = z.object({

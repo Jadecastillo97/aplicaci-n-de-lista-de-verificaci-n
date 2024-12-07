@@ -1,6 +1,7 @@
 "use client"
-import { useState } from "react"
 import { z } from "zod"
+import { useForm, Controller } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -10,55 +11,54 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select"
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ISystem, ITask } from "@/types"
+import { taskSchema } from "@/modules/core/schemas/TaskListSchema"
+import { Textarea } from "@/components/ui/textarea"
+import { useEffect, useState } from "react"
+import { fetchSystems } from "@/api"
 
-// Define the schema and type
-export const taskSchema = z.object({
-  description: z.string().min(1, "La descripción es requerida"),
-  status: z.enum(["true", "false"], {
-    required_error: "El estado es requerido"
-  }),
-  frequency: z.string().min(1, "La frecuencia es requerida"),
-  notes: z.string().optional(),
-  system_id: z.number({ message: "El sistema es requerido" }),
-  date: z.string().optional()
-})
+// Define the form schema using Zod
+const formSchema = taskSchema
 
-type Task = z.infer<typeof taskSchema>
+interface UpdateTaskFormProps {
+  dataDetail?: ITask
+}
 
-export const UpdateTaskForm = () => {
-  const [task, setTask] = useState<Task>({
-    description: "",
-    status: "true",
-    frequency: "",
-    notes: "",
-    system_id: 0,
-    date: ""
+export const UpdateTaskForm = ({ dataDetail }: UpdateTaskFormProps) => {
+  const {
+    handleSubmit,
+    control,
+    register,
+    formState: { errors }
+  } = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      description: dataDetail?.description,
+      status: dataDetail?.status ? "true" : "false",
+      frequency: dataDetail?.frequency,
+      notes: dataDetail?.notes,
+      system_id: dataDetail?.system_id,
+      date: dataDetail?.date
+    }
   })
 
-  const handleTaskChange = (field: keyof Task, value: string | number) => {
-    setTask({ ...task, [field]: value })
+  const [systems, setSystems] = useState<ISystem[]>([])
+
+  const fetchSystemsData = async () => {
+    const { systems } = await fetchSystems()
+    if (systems) {
+      setSystems(systems)
+    }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  useEffect(() => {
+    fetchSystemsData()
+  }, [])
 
-    try {
-      // Validate task data using zod schema
-      taskSchema.parse(task)
-      console.log("Task updated successfully", task)
-      // You can send the task data to the server here
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        console.error("Validation errors:", error.errors)
-      }
-    }
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
+    console.log("Form submitted successfully:", data)
+    // Add your update logic here
   }
 
   return (
@@ -68,62 +68,115 @@ export const UpdateTaskForm = () => {
       </CardHeader>
       <CardContent>
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           className="space-y-4"
         >
-          <Input
-            placeholder="Task Description"
-            value={task.description}
-            onChange={(e) => handleTaskChange("description", e.target.value)}
-            required
-          />
-          <Select
-            onValueChange={(value) => handleTaskChange("status", value)}
-            defaultValue={task.status}
+          {/* System ID */}
+          <div>
+            <Controller
+              name="system_id"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value.toString()}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select System" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {systems.map((system) => (
+                      <SelectItem
+                        key={system.id.toString()}
+                        value={system.id.toString() || ""}
+                      >
+                        {system.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </div>
+
+          <div>
+            {errors.system_id && (
+              <p className="text-red-500 text-sm">{errors.system_id.message}</p>
+            )}
+          </div>
+          {/* Task Description */}
+          <div>
+            <Input
+              placeholder="Task Description"
+              {...register("description")}
+            />
+            {errors.description && (
+              <p className="text-red-500 text-sm">
+                {errors.description.message}
+              </p>
+            )}
+          </div>
+
+          {/* Task Status */}
+          <div>
+            <Controller
+              name="status"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="true">OK</SelectItem>
+                    <SelectItem value="false">NOK</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.status && (
+              <p className="text-red-500 text-sm">{errors.status.message}</p>
+            )}
+          </div>
+
+          {/* Frequency */}
+          <div>
+            <Input
+              placeholder="Frequency"
+              {...register("frequency")}
+            />
+            {errors.frequency && (
+              <p className="text-red-500 text-sm">{errors.frequency.message}</p>
+            )}
+          </div>
+
+          {/* Notes */}
+          <div>
+            <Textarea
+              placeholder="Notes (optional)"
+              {...register("notes")}
+            />
+          </div>
+
+          {/* Date */}
+          <div>
+            <Input
+              type="date"
+              {...register("date")}
+            />
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full"
           >
-            <SelectTrigger>
-              <SelectValue placeholder="Select Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="true">True</SelectItem>
-              <SelectItem value="false">False</SelectItem>
-            </SelectContent>
-          </Select>
-          <Input
-            placeholder="Frequency"
-            value={task.frequency}
-            onChange={(e) => handleTaskChange("frequency", e.target.value)}
-            required
-          />
-          <Input
-            placeholder="Notes (optional)"
-            value={task.notes || ""}
-            onChange={(e) => handleTaskChange("notes", e.target.value)}
-          />
-          <Input
-            type="number"
-            placeholder="System ID"
-            value={task.system_id}
-            onChange={(e) =>
-              handleTaskChange("system_id", Number(e.target.value))
-            }
-            required
-          />
-          <Input
-            type="date"
-            value={task.date || ""}
-            onChange={(e) => handleTaskChange("date", e.target.value)}
-          />
+            Save Changes
+          </Button>
         </form>
       </CardContent>
-      <CardFooter className="flex justify-end">
-        <Button
-          type="submit"
-          onClick={handleSubmit}
-        >
-          Save Changes
-        </Button>
-      </CardFooter>
     </Card>
   )
 }

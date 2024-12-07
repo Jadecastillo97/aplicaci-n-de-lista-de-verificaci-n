@@ -1,3 +1,4 @@
+"use client"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -25,7 +26,7 @@ const systems = [
   { id: 3, name: "System C" }
 ]
 
-export default function RegisterChecklistForm() {
+export const RegisterChecklistForm = () => {
   const [step, setStep] = useState(1)
   const [selectedSystem, setSelectedSystem] = useState("")
   const [tasks, setTasks] = useState([

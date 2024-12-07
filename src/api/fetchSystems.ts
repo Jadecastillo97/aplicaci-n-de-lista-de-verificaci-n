@@ -10,7 +10,6 @@ export async function fetchSystems() {
     .from("systems")
     .select("*")
     .order("created_at", { ascending: false })
-
   return { systems, error }
 }
 

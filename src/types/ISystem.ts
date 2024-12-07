@@ -1,9 +1,9 @@
 export interface ISystem {
   id: string
-  uid?: string
   name: string
   description: string | null
   status: boolean
+  created_at: string
 }
 
 export interface ISystemForm {

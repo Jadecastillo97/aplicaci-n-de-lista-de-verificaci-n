@@ -1,6 +1,7 @@
-import { ChecklistsView } from "@/modules/admin"
+import { ChecklistsSkeleton, ChecklistsView } from "@/modules/admin"
 import { fetchTasks } from "@/api"
 import { Suspense } from "react"
+import { ContentLayout } from "@/components/admin-panel/content-layout"
 
 interface PropsPage {
   searchParams: {
@@ -17,11 +18,11 @@ export default async function page(props: PropsPage) {
   const { tasks, error } = await fetchTasks(date)
 
   return (
-    <>
+    <ContentLayout title="Checklists">
       {error && <div>Failed to load tasks</div>}
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<ChecklistsSkeleton />}>
         {!error && <ChecklistsView data={tasks || []} />}
       </Suspense>
-    </>
+    </ContentLayout>
   )
 }

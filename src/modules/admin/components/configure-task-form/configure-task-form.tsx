@@ -1,5 +1,6 @@
-'use client'
+"use client"
 import { useState } from "react"
+import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -17,85 +18,102 @@ import {
   CardTitle
 } from "@/components/ui/card"
 
-interface Task {
-  description: string
-  frequency: string
-}
+// Define the schema and type
+export const taskSchema = z.object({
+  description: z.string().min(1, "La descripción es requerida"),
+  status: z.enum(["true", "false"], {
+    required_error: "El estado es requerido"
+  }),
+  frequency: z.string().min(1, "La frecuencia es requerida"),
+  notes: z.string().optional(),
+  system_id: z.number({ message: "El sistema es requerido" }),
+  date: z.string().optional()
+})
 
-export const ConfigureTasksForm = () => {
-  const [tasks, setTasks] = useState<Task[]>([
-    { description: "", frequency: "" }
-  ])
+type Task = z.infer<typeof taskSchema>
 
-  const handleAddTask = () => {
-    setTasks([...tasks, { description: "", frequency: "" }])
-  }
+export const UpdateTaskForm = () => {
+  const [task, setTask] = useState<Task>({
+    description: "",
+    status: "true",
+    frequency: "",
+    notes: "",
+    system_id: 0,
+    date: ""
+  })
 
-  const handleTaskChange = (
-    index: number,
-    field: keyof Task,
-    value: string
-  ) => {
-    const newTasks = [...tasks]
-    newTasks[index] = { ...newTasks[index], [field]: value }
-    setTasks(newTasks)
+  const handleTaskChange = (field: keyof Task, value: string | number) => {
+    setTask({ ...task, [field]: value })
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission logic here
-    console.log("Tasks configuration submitted", tasks)
+
+    try {
+      // Validate task data using zod schema
+      taskSchema.parse(task)
+      console.log("Task updated successfully", task)
+      // You can send the task data to the server here
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        console.error("Validation errors:", error.errors)
+      }
+    }
   }
 
   return (
-    <Card className="w-full max-w-2xl mx-auto mt-10">
+    <Card className="w-full max-w-md mx-auto mt-10">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold">
-          Configure Tasks for System
-        </CardTitle>
+        <CardTitle className="text-2xl font-bold">Update Task</CardTitle>
       </CardHeader>
       <CardContent>
         <form
           onSubmit={handleSubmit}
           className="space-y-4"
         >
-          {tasks.map((task, index) => (
-            <div
-              key={index}
-              className="space-y-2 border p-4 rounded-md"
-            >
-              <Input
-                placeholder="Task Description"
-                value={task.description}
-                onChange={(e) =>
-                  handleTaskChange(index, "description", e.target.value)
-                }
-                required
-              />
-              <Select
-                onValueChange={(value) =>
-                  handleTaskChange(index, "frequency", value)
-                }
-                required
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select frequency" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="daily">Daily</SelectItem>
-                  <SelectItem value="weekly">Weekly</SelectItem>
-                  <SelectItem value="monthly">Monthly</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          ))}
-          <Button
-            type="button"
-            onClick={handleAddTask}
-            variant="outline"
+          <Input
+            placeholder="Task Description"
+            value={task.description}
+            onChange={(e) => handleTaskChange("description", e.target.value)}
+            required
+          />
+          <Select
+            onValueChange={(value) => handleTaskChange("status", value)}
+            defaultValue={task.status}
           >
-            Add Another Task
-          </Button>
+            <SelectTrigger>
+              <SelectValue placeholder="Select Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="true">True</SelectItem>
+              <SelectItem value="false">False</SelectItem>
+            </SelectContent>
+          </Select>
+          <Input
+            placeholder="Frequency"
+            value={task.frequency}
+            onChange={(e) => handleTaskChange("frequency", e.target.value)}
+            required
+          />
+          <Input
+            placeholder="Notes (optional)"
+            value={task.notes || ""}
+            onChange={(e) => handleTaskChange("notes", e.target.value)}
+          />
+          <Input
+            type="number"
+            placeholder="System ID"
+            value={task.system_id}
+            onChange={(e) =>
+              handleTaskChange("system_id", Number(e.target.value))
+            }
+            required
+          />
+          <Input
+            type="date"
+            value={task.date || ""}
+            onChange={(e) => handleTaskChange("date", e.target.value)}
+          />
         </form>
       </CardContent>
       <CardFooter className="flex justify-end">

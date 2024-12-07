@@ -136,8 +136,11 @@ export const ChecklistsView = (props: ChecklistProps) => {
                   <Button
                     variant="outline"
                     size="icon"
+                    asChild
                   >
-                    <Edit size={20} />
+                    <Link href={`/admin/checklist/${checklist.id}/edit`}>
+                      <Edit size={20} />
+                    </Link>
                   </Button>
                   <Button
                     variant="outline"

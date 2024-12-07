@@ -57,14 +57,7 @@ export const RegisterChecklistForm = () => {
     resolver: zodResolver(checklistFormSchema),
     defaultValues: {
       selectedSystem: "",
-      tasks: [
-        {
-          description: "",
-          status: "true",
-          frequency: "",
-          notes: ""
-        }
-      ]
+      tasks: []
     }
   })
 

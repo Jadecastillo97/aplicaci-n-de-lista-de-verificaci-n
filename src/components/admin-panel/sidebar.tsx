@@ -1,17 +1,16 @@
-"use client";
-import { Menu } from "@/components/admin-panel/menu";
-import { SidebarToggle } from "@/components/admin-panel/sidebar-toggle";
-import { Button } from "@/components/ui/button";
-import { useSidebar } from "@/hooks/use-sidebar";
-import { useStore } from "@/hooks/use-store";
-import { cn } from "@/lib/utils";
-import { PanelsTopLeft } from "lucide-react";
-import Link from "next/link";
+"use client"
+import { Menu } from "@/components/admin-panel/menu"
+import { SidebarToggle } from "@/components/admin-panel/sidebar-toggle"
+import { Button } from "@/components/ui/button"
+import { useSidebar } from "@/hooks/use-sidebar"
+import { useStore } from "@/hooks/use-store"
+import { cn } from "@/lib/utils"
+import Link from "next/link"
 
 export function Sidebar() {
-  const sidebar = useStore(useSidebar, (x) => x);
-  if (!sidebar) return null;
-  const { isOpen, toggleOpen, getOpenState, setIsHover, settings } = sidebar;
+  const sidebar = useStore(useSidebar, (x) => x)
+  if (!sidebar) return null
+  const { isOpen, toggleOpen, getOpenState, setIsHover, settings } = sidebar
   return (
     <aside
       className={cn(
@@ -20,7 +19,10 @@ export function Sidebar() {
         settings.disabled && "hidden"
       )}
     >
-      <SidebarToggle isOpen={isOpen} setIsOpen={toggleOpen} />
+      <SidebarToggle
+        isOpen={isOpen}
+        setIsOpen={toggleOpen}
+      />
       <div
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}
@@ -34,22 +36,19 @@ export function Sidebar() {
           variant="link"
           asChild
         >
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <PanelsTopLeft className="w-6 h-6 mr-1" />
-            <h1
-              className={cn(
-                "font-bold text-lg whitespace-nowrap transition-[transform,opacity,display] ease-in-out duration-300",
-                !getOpenState()
-                  ? "-translate-x-96 opacity-0 hidden"
-                  : "translate-x-0 opacity-100"
-              )}
-            >
-              Brand
-            </h1>
+          <Link
+            href="/admin"
+            className="flex items-center gap-2"
+          >
+            <img
+              src="/brands/logo_bitel.png"
+              alt="logo-img"
+              className="h-16 mx-auto"
+            />
           </Link>
         </Button>
         <Menu isOpen={getOpenState()} />
       </div>
     </aside>
-  );
+  )
 }

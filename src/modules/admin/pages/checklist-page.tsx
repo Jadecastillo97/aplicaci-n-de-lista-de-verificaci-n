@@ -16,7 +16,7 @@ import { Edit, ImagePlus, Plus } from "lucide-react"
 import Link from "next/link"
 import { useSearchParams, useRouter, usePathname } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
-import ExcelJS from "exceljs"
+import { exportToExcel } from "./export-to-execl"
 
 interface ChecklistProps {
   data: ITask[]
@@ -36,6 +36,8 @@ export const ChecklistsView = (props: ChecklistProps) => {
     newDate.setDate(newDate.getDate() + 1)
   }
   const formattedDate = format(newDate, "yyyy-MM-dd")
+  const dateNow = format(new Date(), "yyyy-MM-dd")
+  const isToday = formattedDate === dateNow
 
   // Filtrar los datos según el término de búsqueda
   const filteredChecklists = data.filter(
@@ -70,92 +72,6 @@ export const ChecklistsView = (props: ChecklistProps) => {
     router.push(`${pathname}?${params.toString()}`)
   }
 
-  // Exportar datos a Excel
-  const exportToExcel = () => {
-    const formattedDate = format(new Date(), "MM/dd/yyyy")
-    const NAME_OF_SHEET = `Checklists ${formattedDate}`
-    const workbook = new ExcelJS.Workbook()
-    const worksheet = workbook.addWorksheet("Checklists")
-
-    // Agregar la cabecera principal
-    const titleRow = worksheet.addRow([`Checklist - Fecha: ${formattedDate}`])
-    titleRow.font = { bold: true, size: 40 }
-    worksheet.mergeCells("A1:E1") // Fusionar las celdas desde A1 hasta E1
-    titleRow.alignment = { vertical: "middle", horizontal: "center" }
-
-    // Agregar encabezados de columnas
-    const headers = [
-      "Sistema",
-      "Descripción",
-      "Frecuencia",
-      "OK / NOK",
-      "Notas"
-    ]
-    const headerRow = worksheet.addRow(headers)
-
-    // Estilizar la fila de encabezados
-    headerRow.eachCell((cell) => {
-      cell.fill = {
-        type: "pattern",
-        pattern: "solid",
-        fgColor: { argb: "000000" }
-      }
-      cell.font = {
-        bold: true,
-        color: { argb: "FFFFFF" },
-        size: 12
-      }
-      cell.alignment = { vertical: "middle", horizontal: "center" }
-    })
-
-    // Agrupar datos por sistema
-    const groupedData: Record<string, ITask[]> = data.reduce(
-      (acc: Record<string, ITask[]>, task) => {
-        if (!acc[task.system.name]) acc[task.system.name] = []
-        acc[task.system.name].push(task)
-        return acc
-      },
-      {} as Record<string, ITask[]>
-    )
-
-    // Agregar datos al worksheet agrupados por sistema
-    Object.entries(groupedData).forEach(([systemName, tasks]) => {
-      tasks.forEach((task, index) => {
-        worksheet.addRow([
-          index === 0 ? systemName : "", // Mostrar el sistema solo en la primera fila
-          task.description,
-          task.frequency,
-          task.status ? "OK" : "NOK",
-          task.notes
-        ])
-      })
-    })
-
-    // Ajustar el ancho de las columnas automáticamente
-    worksheet.columns.forEach((column) => {
-      let maxLength = 0
-      if (column.eachCell) {
-        column.eachCell({ includeEmpty: true }, (cell) => {
-          const cellValue = cell.value ? cell.value.toString() : ""
-          maxLength = Math.max(maxLength, cellValue.length)
-        })
-      }
-      column.width = maxLength + 2 // Agregar un margen
-    })
-
-    // Descargar el archivo Excel
-    workbook.xlsx.writeBuffer().then((buffer) => {
-      const blob = new Blob([buffer], {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-      })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement("a")
-      a.href = url
-      a.download = `${NAME_OF_SHEET}.xlsx`
-      a.click()
-    })
-  }
-
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-2xl font-bold mb-5">Daily Checklists</h1>
@@ -178,7 +94,7 @@ export const ChecklistsView = (props: ChecklistProps) => {
         />
 
         <Button
-          disabled={!(formattedDate === format(new Date(), "yyyy-MM-dd"))}
+          disabled={!isToday}
           asChild
         >
           <Link href="/admin/checklist/create">
@@ -188,7 +104,10 @@ export const ChecklistsView = (props: ChecklistProps) => {
         </Button>
         <Button
           variant="outline"
-          onClick={exportToExcel}
+          onClick={() => {
+            exportToExcel(data)
+          }}
+          disabled={data.length === 0}
         >
           Exportar a Excel
         </Button>

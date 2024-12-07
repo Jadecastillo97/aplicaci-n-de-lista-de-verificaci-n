@@ -155,9 +155,10 @@ export const RegisterChecklistForm = () => {
                 key={task.id}
                 className="space-y-2 border p-4 rounded-md"
               >
-                <Input
+                <Textarea
                   placeholder="Descripción de la tarea"
                   {...register(`tasks.${index}.description`)}
+                  rows={5}
                 />
                 {errors.tasks?.[index]?.description && (
                   <p className="text-red-500 text-sm">

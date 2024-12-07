@@ -10,40 +10,6 @@ import {
 export const AdminDashboard = () => {
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-md">
-        <nav className="mt-5 px-2">
-          <Link
-            href="/sistemas"
-            className="group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-100 transition ease-in-out duration-150"
-          >
-            <LayoutDashboard className="mr-4 h-6 w-6 text-gray-400 group-hover:text-gray-500" />
-            Sistemas
-          </Link>
-          <Link
-            href="/admin/checklist"
-            className="mt-1 group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-100 transition ease-in-out duration-150"
-          >
-            <CheckSquare className="mr-4 h-6 w-6 text-gray-400 group-hover:text-gray-500" />
-            Checklists
-          </Link>
-          <Link
-            href="/tareas"
-            className="mt-1 group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-100 transition ease-in-out duration-150"
-          >
-            <AlertTriangle className="mr-4 h-6 w-6 text-gray-400 group-hover:text-gray-500" />
-            Tareas
-          </Link>
-          <Link
-            href="/usuarios"
-            className="mt-1 group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-100 transition ease-in-out duration-150"
-          >
-            <Users className="mr-4 h-6 w-6 text-gray-400 group-hover:text-gray-500" />
-            Usuarios
-          </Link>
-        </nav>
-      </aside>
-
       {/* Main content */}
       <main className="flex-1 overflow-y-auto p-5">
         <h1 className="text-3xl font-semibold text-gray-900">

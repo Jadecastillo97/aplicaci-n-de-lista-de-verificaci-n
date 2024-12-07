@@ -79,7 +79,7 @@ export const UpdateTaskForm = ({ dataDetail }: UpdateTaskFormProps) => {
               render={({ field }) => (
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value.toString()}
+                  defaultValue={field.value ? field.value.toString() : ""}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select System" />
@@ -88,7 +88,7 @@ export const UpdateTaskForm = ({ dataDetail }: UpdateTaskFormProps) => {
                     {systems.map((system) => (
                       <SelectItem
                         key={system.id.toString()}
-                        value={system.id.toString() || ""}
+                        value={system.id ? system.id.toString() : ""}
                       >
                         {system.name}
                       </SelectItem>

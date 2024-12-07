@@ -21,11 +21,25 @@ export const ChecklistsView = (props: ChecklistProps) => {
   const { data } = props
   const [search, setSearch] = useState("")
 
+  // Filtrar los datos según el término de búsqueda
   const filteredChecklists = data.filter(
     (checklist) =>
       checklist.description.toLowerCase().includes(search.toLowerCase()) ||
       checklist.date.includes(search) ||
       checklist.system.name.toLowerCase().includes(search.toLowerCase())
+  )
+
+  // Agrupar los datos por sistema
+  const groupedChecklists: Record<string, ITask[]> = filteredChecklists.reduce(
+    (groups, checklist) => {
+      const systemName = checklist.system.name
+      if (!groups[systemName]) {
+        groups[systemName] = []
+      }
+      groups[systemName].push(checklist)
+      return groups
+    },
+    {} as Record<string, ITask[]>
   )
 
   return (
@@ -51,24 +65,29 @@ export const ChecklistsView = (props: ChecklistProps) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredChecklists.map((checklist) => (
-            <TableRow key={checklist.id}>
-              <TableCell>{checklist.system.name}</TableCell>
-              <TableCell>{checklist.description}</TableCell>
-              <TableCell>
-                {format(new Date(checklist.date), "MM/dd/yyyy")}
-              </TableCell>
-              <TableCell>{checklist.status ? "OK" : "NOK"}</TableCell>
-              <TableCell>
-                <Button
-                  variant="outline"
-                  size="sm"
-                >
-                  View Details
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
+          {Object.entries(groupedChecklists).map(([systemName, tasks]) =>
+            tasks.map((checklist, index) => (
+              <TableRow key={checklist.id}>
+                {/* Mostrar el nombre del sistema solo en la primera fila del grupo */}
+                {index === 0 && (
+                  <TableCell rowSpan={tasks.length}>{systemName}</TableCell>
+                )}
+                <TableCell>{checklist.description}</TableCell>
+                <TableCell>
+                  {format(new Date(checklist.date), "MM/dd/yyyy")}
+                </TableCell>
+                <TableCell>{checklist.status ? "OK" : "NOK"}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                  >
+                    View Details
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </div>

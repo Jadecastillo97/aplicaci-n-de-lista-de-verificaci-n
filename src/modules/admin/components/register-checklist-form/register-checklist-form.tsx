@@ -32,6 +32,7 @@ import {
 import { fetchSystems } from "@/api"
 import { ISystem } from "@/types"
 import { taskSchema } from "@/modules/core/schemas/TaskListSchema"
+import { saveTaskMany } from "@/api"
 
 const checklistFormSchema = z.object({
   selectedSystem: z.string().min(1, "Debes seleccionar un sistema"),
@@ -85,9 +86,12 @@ export const RegisterChecklistForm = () => {
     setIsDialogOpen(true)
   }
 
-  const confirmSubmit = () => {
-    console.log("Checklist submitted")
+  const confirmSubmit = async () => {
     setIsDialogOpen(false)
+    const { task } = await saveTaskMany({
+      tasks: watch("tasks")
+    })
+    console.log("Checklist saved", task)
   }
 
   const renderStep = () => {

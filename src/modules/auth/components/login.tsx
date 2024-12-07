@@ -40,7 +40,7 @@ export const LoginForm = () => {
     setErrors({})
 
     // Lógica de inicio de sesión
-    if (email === "jade@gmail.com" && password === "123456789") {
+    if (email === "fidencia@gmail.com" && password === "123456789") {
       router.push("/admin")
     } else {
       setErrors({ form: "Correo o contraseña incorrectos" })

@@ -18,28 +18,33 @@ import {
 } from "@/components/ui/select"
 import { ISystem } from "@/types"
 import { format } from "date-fns"
+import { Input } from "@/components/ui/input"
 
 interface PropsPage {
   data: ISystem[]
 }
 
 export const AlertsView = (props: PropsPage) => {
-  const { data } = props
+  const { data: alerts } = props
 
-  const [alerts, setAlerts] = useState(data)
   const [filter, setFilter] = useState("all")
+  const [search, setSearch] = useState("")
 
   const filteredAlerts = alerts.filter((alert) => {
-    if (filter === "all") return true
-    if (filter === "true") return alert.status
-    if (filter === "false") return !alert.status
-    return true
+    const matchesFilter =
+      filter === "all" ||
+      (filter === "true" && alert.status) ||
+      (filter === "false" && !alert.status)
+    const matchesSearch = alert.name
+      .toLowerCase()
+      .includes(search.toLowerCase())
+    return matchesFilter && matchesSearch
   })
 
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-2xl font-bold mb-5">Sistemas diarios</h1>
-      <div className="mb-4">
+      <div className="mb-4 flex justify-between">
         <Select
           onValueChange={setFilter}
           defaultValue="all"
@@ -53,6 +58,15 @@ export const AlertsView = (props: PropsPage) => {
             <SelectItem value="false">Inactivos</SelectItem>
           </SelectContent>
         </Select>
+        <div>
+          <Input
+            type="text"
+            placeholder="Buscar por nombre..."
+            className="max-w-sm"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
       </div>
       <Table>
         <TableHeader>

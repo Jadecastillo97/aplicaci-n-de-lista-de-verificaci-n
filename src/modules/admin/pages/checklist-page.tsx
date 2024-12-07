@@ -11,6 +11,7 @@ import {
   TableRow
 } from "@/components/ui/table"
 import { ITask } from "@/types"
+import { format } from "date-fns"
 
 interface ChecklistProps {
   data: ITask[]
@@ -45,7 +46,7 @@ export const ChecklistsView = (props: ChecklistProps) => {
             <TableHead>System Name</TableHead>
             <TableHead>Description</TableHead>
             <TableHead>Date</TableHead>
-            <TableHead>Status</TableHead>
+            <TableHead>OK / NOK</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -54,10 +55,10 @@ export const ChecklistsView = (props: ChecklistProps) => {
             <TableRow key={checklist.id}>
               <TableCell>{checklist.system.name}</TableCell>
               <TableCell>{checklist.description}</TableCell>
-              <TableCell>{checklist.date}</TableCell>
               <TableCell>
-                {checklist.status ? "Completed" : "Pending"}
+                {format(new Date(checklist.date), "MM/dd/yyyy")}
               </TableCell>
+              <TableCell>{checklist.status ? "OK" : "NOK"}</TableCell>
               <TableCell>
                 <Button
                   variant="outline"

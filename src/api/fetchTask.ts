@@ -2,14 +2,17 @@
 import { createClient } from "@/utils/supabase/server"
 import { cookies } from "next/headers"
 import { TaskMany } from "@/modules/core/schemas/TaskListSchema"
-import { ITask } from "@/types"
+import { revalidatePath } from "next/cache"
+import { taskSchema } from "@/modules/core/schemas/TaskListSchema"
+import { z } from "zod"
 
-export async function fetchTasks() {
+export async function fetchTasks(date: string) {
   const supabase = createClient(cookies())
 
   const { data: tasks, error } = await supabase
     .from("tasks")
-    .select("*")
+    .select("*, system:system_id(*)")
+    .eq("date", date)
     .order("created_at", { ascending: false })
 
   return { tasks, error }
@@ -87,43 +90,24 @@ export async function saveTaskMany(arrayTask: TaskMany) {
   const { data: task, error } = await supabase
     .from("tasks")
     .insert(arrayTask.tasks)
-
+  revalidatePath("/admin/checklists")
   return { task, error }
 }
 
-export async function updateTaskMany(arrayTask: TaskMany) {
+export async function saveOrUpdateTask(
+  data: z.infer<typeof taskSchema>,
+  id?: string
+) {
   const supabase = createClient(cookies())
 
-  // Divide las tareas en dos grupos: con `id` y sin `id`
-  const tasksWithId = arrayTask.tasks.filter((task) => task.id !== undefined)
-  const tasksWithoutId = arrayTask.tasks.filter((task) => task.id === undefined)
-
-  let taskData: ITask[] = []
-  let error = null
-
-  // Actualizar las tareas que ya tienen un `id`
-  if (tasksWithId.length > 0) {
-    console.log(tasksWithId)
-    tasksWithId.forEach(async (task) => {
-      const { data, error: updateError } = await supabase
+  const { data: task, error } = id
+    ? await supabase
         .from("tasks")
-        .update(task)
-        .eq("id", task.id)
-        .select()
-      if (updateError) error = updateError
-      taskData = taskData.concat(data || [])
-    })
-  }
-
-  // Insertar las nuevas tareas sin `id`
-  if (tasksWithoutId.length > 0) {
-    const { data, error: insertError } = await supabase
-      .from("tasks")
-      .insert(tasksWithoutId)
-      .select()
-    if (insertError) error = insertError
-    taskData = taskData.concat(data || [])
-  }
-
-  return { task: taskData, error }
+        .update(data)
+        .eq("id", id)
+        .select("*")
+        .single()
+    : await supabase.from("tasks").insert(data).select("*").single()
+  revalidatePath("/admin/checklists")
+  return { task, error }
 }

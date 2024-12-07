@@ -33,7 +33,7 @@ export function getMenuList(pathname: string): Group[] {
       groupLabel: "",
       menus: [
         {
-          href: "/dashboard",
+          href: "/admin",
           label: "Dashboard",
           icon: LayoutGrid,
           submenus: []
@@ -49,17 +49,17 @@ export function getMenuList(pathname: string): Group[] {
           icon: SquarePen,
           submenus: [
             {
-              href: "/checklist",
+              href: "/admin/checklist",
               label: "Lista de Checklists"
             },
             {
-              href: "/checklist/new",
+              href: "/admin/checklist/create",
               label: "Iniciar Checklist"
             }
           ]
         },
         {
-          href: "/categories",
+          href: "/admin/alerts",
           label: "Sistemas",
           icon: Bookmark
         }
@@ -69,12 +69,12 @@ export function getMenuList(pathname: string): Group[] {
       groupLabel: "Settings",
       menus: [
         {
-          href: "/users",
+          href: "/admin/users",
           label: "Users",
           icon: Users
         },
         {
-          href: "/account",
+          href: "/admin/account",
           label: "Account",
           icon: Settings
         }

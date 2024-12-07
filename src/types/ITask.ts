@@ -4,13 +4,15 @@ import { ITasksList } from "./ITaskList"
 export interface ITask {
   id: string
   // uid?: string
-  task_list_id: number
+  // task_list_id: number
   system_id: number
-  chekList: string
-  frecuency: string
+  system: ISystem
+  date: string
+  created_at: string
+  frequency: string
+  description: string
+  notes: string
   status: boolean
-  review: boolean
-  note: string
 }
 
 export interface ITaskDetail {
